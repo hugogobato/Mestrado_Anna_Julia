@@ -7,6 +7,10 @@
     "learning_rate": 0.001,
     "scaler_type": "robust",
     "loss": "huber",
+    "batch_size": 32,
+    "early_stop_patience_steps": 10,
+    "val_check_steps": 20,
+    "valid_loss": "qlike",
     "n_features": "all",
     "revin": true
   },
@@ -96,5 +100,6 @@
     "target_lag_24"
   ],
   "hp_train_end": "2007-12-18 00:00:00",
-  "hp_val_end": "2009-12-21 00:00:00"
+  "hp_val_end": "2009-12-21 00:00:00",
+  "hp_validation_scheme": "fixed chronological 8-year train / 2-year validation; no internal rolling 4+1+1"
 }

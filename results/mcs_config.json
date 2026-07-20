@@ -1,0 +1,8 @@
+{
+  "size":0.05,
+  "reps":1000,
+  "block_size":1000,
+  "method":"R",
+  "loss":"MSE",
+  "implementation":"arch.bootstrap.MCS"
+}

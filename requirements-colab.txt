@@ -7,5 +7,5 @@ matplotlib>=3.7
 openpyxl>=3.1
 pyarrow>=12
 optuna>=3.4
-arch>=6.0
+arch>=8.0
 xgboost>=2.0,<3.0

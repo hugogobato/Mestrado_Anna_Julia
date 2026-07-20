@@ -151,7 +151,7 @@ def hp_split(monthly: pd.DataFrame, train_years: int = C.TRAIN_YEARS,
     return train, val
 
 
-def rolling_indices(monthly: pd.DataFrame) -> list[dict]:
+def rolling_indices(monthly: pd.DataFrame, expanding: bool = False) -> list[dict]:
     """Gera indices para rolling 4+1+1 step anual no periodo de teste.
 
     Cada iteracao:
@@ -160,6 +160,8 @@ def rolling_indices(monthly: pd.DataFrame) -> list[dict]:
       test:  1 ano de blocos seguintes
       step:  1 ano (desloca t_start)
     Retorna lista de dicts {train_idx, val_idx, test_idx, test_start_date}.
+    Com ``expanding=True``, o treino começa no primeiro bloco disponível e
+    expande até o início de cada validação.
     """
     monthly = monthly.sort_values("date").reset_index(drop=True)
     first_year = int(monthly["date"].dt.year.min())
@@ -171,7 +173,10 @@ def rolling_indices(monthly: pd.DataFrame) -> list[dict]:
         val_end = val_year + C.ROLL_VAL_YEARS
         test_end = val_end + C.ROLL_TEST_YEARS
         years = monthly["date"].dt.year
-        train_pos = np.flatnonzero((years >= train_start) & (years < val_year))
+        if expanding:
+            train_pos = np.flatnonzero(years < val_year)
+        else:
+            train_pos = np.flatnonzero((years >= train_start) & (years < val_year))
         val_pos = np.flatnonzero((years >= val_year) & (years < val_end))
         test_pos = np.flatnonzero((years >= val_end) & (years < test_end))
         if len(train_pos) and len(val_pos) and len(test_pos):

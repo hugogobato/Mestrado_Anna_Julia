@@ -10,7 +10,7 @@ Uso local curto:
     python src/03_tsmixerx.py --trials 5 --max-steps 50 --smoke
 
 No Colab:
-    python src/03_tsmixerx.py --trials 100 --max-steps 1000
+    python src/03_tsmixerx.py --trials 200 --max-steps 1000
 """
 
 from __future__ import annotations
@@ -134,7 +134,9 @@ class TSMixerXRegressor:
 
     def __init__(self, input_size: int, n_block: int, ff_dim: int, dropout: float,
                  learning_rate: float, max_steps: int, scaler_type: str = "robust",
-                 revin: bool = True, loss: str = "huber", seed: int = C.SEED):
+                 revin: bool = True, loss: str = "huber", batch_size: int = 32,
+                 early_stop_patience_steps: int = 10, val_check_steps: int = 20,
+                 valid_loss: str = "qlike", seed: int = C.SEED):
         self.input_size = int(input_size)
         self.n_block = int(n_block)
         self.ff_dim = int(ff_dim)
@@ -144,6 +146,10 @@ class TSMixerXRegressor:
         self.scaler_type = scaler_type
         self.revin = bool(revin)
         self.loss_name = loss
+        self.batch_size = int(batch_size)
+        self.early_stop_patience_steps = int(early_stop_patience_steps)
+        self.val_check_steps = int(val_check_steps)
+        self.valid_loss_name = valid_loss
         self.seed = seed
         self.model = None
 
@@ -172,9 +178,12 @@ class TSMixerXRegressor:
         scale = scale if np.isfinite(scale) and scale > 1e-8 else 1.0
         return (y - center) / scale, center, scale
 
-    def _sequences(self, x: np.ndarray, y: np.ndarray, positions: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    def _sequences(self, x: np.ndarray, y: np.ndarray, positions: np.ndarray,
+                   context_positions: np.ndarray | None = None) -> tuple[np.ndarray, np.ndarray]:
         seq, targets = [], []
-        pos_set = set(int(i) for i in positions)
+        if context_positions is None:
+            context_positions = positions
+        pos_set = set(int(i) for i in context_positions)
         for pos in positions:
             pos = int(pos)
             lo = pos - self.input_size + 1
@@ -185,7 +194,8 @@ class TSMixerXRegressor:
                 targets.append(y[pos])
         return np.asarray(seq, dtype=np.float32), np.asarray(targets, dtype=np.float32)
 
-    def fit(self, x: np.ndarray, y: np.ndarray, positions: np.ndarray) -> "TSMixerXRegressor":
+    def fit(self, x: np.ndarray, y: np.ndarray, positions: np.ndarray,
+            validation_positions: np.ndarray | None = None) -> "TSMixerXRegressor":
         try:
             import torch
             from torch import nn
@@ -194,7 +204,8 @@ class TSMixerXRegressor:
 
         _set_seed(self.seed)
         self.device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-        x, self.x_center, self.x_scale = self._x_scale(x.astype(float), positions)
+        raw_x = x.astype(float)
+        x, self.x_center, self.x_scale = self._x_scale(raw_x, positions)
         y_scaled, self.y_center, self.y_scale = self._y_scale(y.astype(float), positions)
         seq, target = self._sequences(x, y_scaled, positions)
         if len(seq) == 0:
@@ -202,6 +213,15 @@ class TSMixerXRegressor:
 
         X = torch.tensor(seq, dtype=torch.float32, device=self.device)
         Y = torch.tensor(target, dtype=torch.float32, device=self.device).view(-1, 1)
+        val_seq = val_target = None
+        if validation_positions is not None and len(validation_positions):
+            context = np.arange(0, int(np.max(validation_positions)) + 1, dtype=int)
+            val_seq, val_target = self._sequences(x, y_scaled, validation_positions, context)
+            if len(val_seq):
+                val_X = torch.tensor(val_seq, dtype=torch.float32, device=self.device)
+                val_Y = torch.tensor(val_target, dtype=torch.float32, device=self.device).view(-1, 1)
+            else:
+                val_X = val_Y = None
         n_steps, n_features = X.shape[1], X.shape[2]
 
         self.model = _build_tsmixer_net(n_steps, n_features, self.n_block, self.ff_dim, self.dropout).to(self.device)
@@ -213,12 +233,44 @@ class TSMixerXRegressor:
         else:
             loss_fn = nn.SmoothL1Loss()
         self.model.train()
-        for _ in range(self.max_steps):
+        batch_size = max(1, min(self.batch_size, len(X)))
+        best_state = None
+        best_valid = np.inf
+        bad_checks = 0
+        generator = torch.Generator(device=self.device)
+        generator.manual_seed(self.seed)
+        for step in range(1, self.max_steps + 1):
             optimizer.zero_grad(set_to_none=True)
-            loss = loss_fn(self.model(X), Y)
+            batch_idx = torch.randperm(len(X), generator=generator, device=self.device)[:batch_size]
+            loss = loss_fn(self.model(X[batch_idx]), Y[batch_idx])
             loss.backward()
             torch.nn.utils.clip_grad_norm_(self.model.parameters(), 1.0)
             optimizer.step()
+            if val_X is not None and step % self.val_check_steps == 0:
+                self.model.eval()
+                with torch.no_grad():
+                    val_pred_scaled = self.model(val_X).squeeze(-1).detach().cpu().numpy()
+                val_pred = val_pred_scaled * self.y_scale + self.y_center
+                val_true = val_Y.squeeze(-1).detach().cpu().numpy() * self.y_scale + self.y_center
+                if self.valid_loss_name.lower() == "qlike":
+                    ratio = np.maximum(val_true, 1e-12) / np.maximum(val_pred, 1e-12)
+                    valid_score = float(np.mean(ratio - np.log(ratio) - 1.0))
+                elif self.valid_loss_name.lower() == "mae":
+                    valid_score = float(np.mean(np.abs(val_true - val_pred)))
+                else:
+                    valid_score = float(np.mean((val_true - val_pred) ** 2))
+                if valid_score < best_valid - 1e-8:
+                    import copy
+                    best_valid = valid_score
+                    best_state = copy.deepcopy(self.model.state_dict())
+                    bad_checks = 0
+                else:
+                    bad_checks += 1
+                self.model.train()
+                if self.early_stop_patience_steps >= 0 and bad_checks >= self.early_stop_patience_steps:
+                    break
+        if best_state is not None:
+            self.model.load_state_dict(best_state)
         return self
 
     def predict(self, x: np.ndarray, positions: np.ndarray) -> np.ndarray:
@@ -265,6 +317,10 @@ class TSMixerXRegressor:
                 "scaler_type": self.scaler_type,
                 "revin": self.revin,
                 "loss": self.loss_name,
+                "batch_size": self.batch_size,
+                "early_stop_patience_steps": self.early_stop_patience_steps,
+                "val_check_steps": self.val_check_steps,
+                "valid_loss": self.valid_loss_name,
                 "seed": self.seed,
                 "n_features": int(self.x_scale.shape[0]),
             },
@@ -308,6 +364,10 @@ def _trial_config(trial) -> dict:
         "learning_rate": trial.suggest_categorical("learning_rate", [1e-4, 3e-4, 1e-3, 3e-3]),
         "scaler_type": trial.suggest_categorical("scaler_type", ["identity", "robust", "standard"]),
         "loss": trial.suggest_categorical("loss", ["mae", "mse", "huber"]),
+        "batch_size": trial.suggest_categorical("batch_size", [16, 32, 64]),
+        "early_stop_patience_steps": 10,
+        "val_check_steps": 20,
+        "valid_loss": "qlike",
         "n_features": trial.suggest_categorical("n_features", [30, 50, 70, "all"]),
         "revin": trial.suggest_categorical("revin", [True, False]),
     }
@@ -323,7 +383,7 @@ def _objective_factory(panel: pd.DataFrame, train_idx: np.ndarray, val_idx: np.n
         x, _, _ = _matrix(panel, cols, train_idx)
         model = TSMixerXRegressor(**{k: v for k, v in config.items() if k != "n_features"},
                                   max_steps=max_steps)
-        model.fit(x, y, train_idx)
+        model.fit(x, y, train_idx, validation_positions=val_idx)
         pred = model.predict(x, val_idx)
         valid = np.isfinite(pred) & np.isfinite(y[val_idx])
         if not valid.any():
@@ -361,11 +421,18 @@ def search_hp(panel: pd.DataFrame, trials: int, max_steps: int, smoke: bool = Fa
         warnings.warn("Optuna não instalado; usando configuração inicial determinística.")
         best = {"input_size": 12, "n_block": 3, "ff_dim": 64, "dropout": 0.1,
                 "learning_rate": 1e-3, "scaler_type": "robust", "loss": "huber",
+                "batch_size": 32, "early_stop_patience_steps": 10,
+                "val_check_steps": 20, "valid_loss": "qlike",
                 "n_features": "all", "revin": True}
 
     selected = select_features(panel, train_idx, best.get("n_features", "all"), candidates)
-    payload = {"best_params": best, "selected_features": selected,
-               "hp_train_end": str(train.date.max()), "hp_val_end": str(val.date.max())}
+    payload = {
+        "best_params": best,
+        "selected_features": selected,
+        "hp_train_end": str(train.date.max()),
+        "hp_val_end": str(val.date.max()),
+        "hp_validation_scheme": "fixed chronological 8-year train / 2-year validation; no internal rolling 4+1+1",
+    }
     C.HP_SEARCH_DIR.mkdir(parents=True, exist_ok=True)
     (C.HP_SEARCH_DIR / "best_config.json").write_text(json.dumps(payload, indent=2, default=str), encoding="utf-8")
     print(f"Melhor configuração HP: {best}")
@@ -392,7 +459,8 @@ def run(panel_path: Path = C.DATA_PARQUET, output: Path = C.FORECAST_TSMIXERX,
         tr0, tr1 = info["train_idx"]
         va0, va1 = info["val_idx"]
         te0, te1 = info["test_idx"]
-        fit_idx = np.arange(tr0, va1, dtype=int)
+        fit_idx = np.arange(tr0, tr1, dtype=int)
+        validation_idx = np.arange(va0, va1, dtype=int)
         test_idx = np.arange(te0, te1, dtype=int)
         x, _, _ = _matrix(panel, selected, fit_idx)
         y = panel[C.TARGET].to_numpy(dtype=float)
@@ -401,7 +469,7 @@ def run(panel_path: Path = C.DATA_PARQUET, output: Path = C.FORECAST_TSMIXERX,
         model = TSMixerXRegressor(**params)
         artifact_path = None
         try:
-            model.fit(x, y, fit_idx)
+            model.fit(x, y, fit_idx, validation_positions=validation_idx)
             pred = model.predict(x, test_idx)
             if save_models:
                 artifact = model_dir / f"tsmixerx_window_{window_id:02d}.pt"

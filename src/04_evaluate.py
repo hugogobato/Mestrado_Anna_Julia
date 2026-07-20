@@ -125,34 +125,34 @@ def clark_west(y: np.ndarray, larger_pred: np.ndarray, nested_pred: np.ndarray) 
     return {"stat": stat, "pvalue": pvalue, "n": len(adjusted)}
 
 
-def mcs_approx(losses: pd.DataFrame, alpha: float = 0.10) -> list[str]:
-    """Eliminação sequencial MCS com diferenças pareadas e HAC.
+def run_arch_mcs(losses: pd.DataFrame, size: float = 0.05, reps: int = 1000,
+                 block_size: int = 1000, method: str = "R", seed: int = C.SEED) -> dict:
+    """Executa o MCS oficial de Hansen, Lunde e Nason via ``arch``.
 
-    É uma implementação leve para o relatório exploratório. A versão final
-    da dissertação pode substituir a etapa de p-valores por bootstrap
-    estacionário, mantendo a mesma interface e os mesmos arquivos.
+    ``losses`` deve conter uma coluna por modelo e uma linha por data. Como
+    no exemplo de referência, usamos perdas MSE, em que valores menores são
+    melhores. A função não possui fallback aproximado: uma execução final sem
+    ``arch`` instalado deve falhar explicitamente, evitando resultados que
+    pareçam um MCS oficial.
     """
-    active = list(losses.columns)
-    while len(active) > 1:
-        means = losses[active].mean()
-        worst = str(means.idxmax())
-        rest = [c for c in active if c != worst]
-        d = losses[worst].to_numpy() - losses[rest].mean(axis=1).to_numpy()
-        d = d[np.isfinite(d)]
-        if len(d) < 3:
-            break
-        stat = d.mean() / np.sqrt(_hac_variance(d) / len(d))
-        try:
-            from scipy.stats import norm
+    from arch.bootstrap import MCS
 
-            pvalue = float(2 * norm.sf(abs(stat)))
-        except ImportError:
-            break
-        if pvalue < alpha and d.mean() > 0:
-            active.remove(worst)
-        else:
-            break
-    return active
+    losses = losses.dropna(axis=0, how="any").astype(float)
+    if losses.shape[0] < 10 or losses.shape[1] < 2:
+        raise ValueError("MCS requer pelo menos 10 observações e 2 modelos completos.")
+    mcs = MCS(losses, size=size, reps=reps, block_size=block_size, method=method, seed=seed)
+    mcs.compute()
+    pvalues = mcs.pvalues.copy()
+    return {
+        "pvalues": pvalues,
+        "included": list(mcs.included),
+        "excluded": list(mcs.excluded),
+        "losses": losses,
+        "size": size,
+        "reps": reps,
+        "block_size": block_size,
+        "method": method,
+    }
 
 
 def _load_forecasts() -> pd.DataFrame:
@@ -165,11 +165,13 @@ def _load_forecasts() -> pd.DataFrame:
     return out.sort_values(["model", "date"]).reset_index(drop=True)
 
 
-def _metric_table(forecasts: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, dict[str, list[str]]]:
+def _metric_table(forecasts: pd.DataFrame, mcs_reps: int = 1000,
+                  mcs_block_size: int = 1000, mcs_size: float = 0.05) -> tuple[pd.DataFrame, pd.DataFrame, dict]:
     models = sorted(forecasts.model.dropna().unique())
     rw = forecasts.loc[forecasts.model == "RW", ["date", "y_hat"]].rename(columns={"y_hat": "rw_hat"})
     rows = []
     loss_frames = {}
+    mcs_loss_frames = {}
     for model in models:
         f = forecasts.loc[forecasts.model == model, ["date", "y", "y_hat"]].copy()
         f = f.merge(rw, on="date", how="left")
@@ -184,15 +186,28 @@ def _metric_table(forecasts: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame, 
         naive = np.where(np.isfinite(naive), naive, y)
         losses = pointwise_loss(y, p)
         loss_frames[model] = pd.Series(losses, index=f.date.to_numpy())
+        # MCS conforme ao exemplo fornecido: perda quadrática por observação.
+        mcs_loss_frames[model] = pd.Series((y - p) ** 2, index=f.date.to_numpy())
         rows.append({"model": model, "n": len(y), "QLIKE": qlike(y, p), "MSE": mse(y, p),
                      "MAE": mae(y, p), "R2_oos": r2_oos(y, p, naive),
                      "mean_y_hat": float(np.mean(p))})
 
     loss_df = pd.concat(loss_frames, axis=1).sort_index() if loss_frames else pd.DataFrame()
-    mcs = mcs_approx(loss_df) if not loss_df.empty else []
+    mcs_loss_df = pd.concat(mcs_loss_frames, axis=1).sort_index() if mcs_loss_frames else pd.DataFrame()
+    mcs = run_arch_mcs(mcs_loss_df, size=mcs_size, reps=mcs_reps,
+                       block_size=mcs_block_size) if not mcs_loss_df.empty else None
     table = pd.DataFrame(rows)
-    table["MCS_approx_included"] = table.model.isin(mcs)
-    return table, loss_df, {"mcs": mcs}
+    if mcs is not None:
+        table["MCS_arch_included"] = table.model.isin(mcs["included"])
+        pvalues = mcs["pvalues"]
+        if isinstance(pvalues, pd.DataFrame) and "Pvalue" in pvalues:
+            table["MCS_arch_pvalue"] = table.model.map(pvalues["Pvalue"])
+        else:
+            table["MCS_arch_pvalue"] = np.nan
+    else:
+        table["MCS_arch_included"] = False
+        table["MCS_arch_pvalue"] = np.nan
+    return table, loss_df, mcs
 
 
 def _pairwise_tables(forecasts: pd.DataFrame, models: list[str]) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -263,12 +278,17 @@ def _make_figures(forecasts: pd.DataFrame, dm_p: pd.DataFrame, output_dir: Path)
         plt.close(fig)
 
 
-def run(output_csv: Path = C.METRICS_CSV, make_figures: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
+def run(output_csv: Path = C.METRICS_CSV, make_figures: bool = True,
+        mcs_reps: int = 1000, mcs_block_size: int = 1000,
+        mcs_size: float = 0.05) -> tuple[pd.DataFrame, pd.DataFrame]:
     forecasts = _load_forecasts()
-    metrics, loss_df, meta = _metric_table(forecasts)
+    metrics, loss_df, mcs = _metric_table(forecasts, mcs_reps, mcs_block_size, mcs_size)
     models = metrics.model.tolist()
     dm_stat, dm_p, gw_p, cw_p = _pairwise_tables(forecasts, models)
-    metrics["MCS_approx_set"] = ", ".join(meta["mcs"])
+    if mcs is None:
+        raise RuntimeError("O MCS oficial não foi calculado.")
+    metrics["MCS_arch_included_set"] = ", ".join(map(str, mcs["included"]))
+    metrics["MCS_arch_excluded_set"] = ", ".join(map(str, mcs["excluded"]))
     metrics["DM_p_vs_RW"] = metrics.model.map(dm_p["RW"] if "RW" in dm_p else pd.Series(dtype=float))
     metrics["GW_p_vs_RW"] = metrics.model.map(gw_p["RW"] if "RW" in gw_p else pd.Series(dtype=float))
     metrics["CW_p_vs_RW"] = metrics.model.map(cw_p["RW"] if "RW" in cw_p else pd.Series(dtype=float))
@@ -277,9 +297,25 @@ def run(output_csv: Path = C.METRICS_CSV, make_figures: bool = True) -> tuple[pd
     dm_p.to_csv(output_csv.parent / "dm_pvalues.csv")
     gw_p.to_csv(output_csv.parent / "gw_pvalues.csv")
     cw_p.to_csv(output_csv.parent / "cw_pvalues.csv")
+    mcs["pvalues"].to_csv(output_csv.parent / "mcs_pvalues.csv")
+    pvalues = mcs["pvalues"]
+    pvalue_map = pvalues["Pvalue"].to_dict() if isinstance(pvalues, pd.DataFrame) and "Pvalue" in pvalues else {}
+    membership = pd.DataFrame({"model": list(mcs["losses"].columns)})
+    membership["included"] = membership["model"].isin(mcs["included"])
+    membership["status"] = np.where(membership["included"], "included", "excluded")
+    membership["pvalue"] = membership["model"].map(pvalue_map)
+    membership.to_csv(output_csv.parent / "mcs_membership.csv", index=False)
+    (output_csv.parent / "mcs_config.json").write_text(
+        pd.Series({"size": mcs["size"], "reps": mcs["reps"],
+                   "block_size": mcs["block_size"], "method": mcs["method"],
+                   "loss": "MSE", "implementation": "arch.bootstrap.MCS"}).to_json(indent=2),
+        encoding="utf-8"
+    )
     if make_figures:
         _make_figures(forecasts, dm_p, C.FIGURES_DIR)
     print(f"Métricas salvas em: {output_csv}")
+    print(f"MCS arch incluído: {mcs['included']}")
+    print(f"MCS arch excluído: {mcs['excluded']}")
     print(metrics.to_string(index=False))
     return metrics, forecasts
 
@@ -288,8 +324,13 @@ def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--output", type=Path, default=C.METRICS_CSV)
     parser.add_argument("--no-figures", action="store_true")
+    parser.add_argument("--mcs-reps", type=int, default=1000)
+    parser.add_argument("--mcs-block-size", type=int, default=1000)
+    parser.add_argument("--mcs-size", type=float, default=0.05)
     args = parser.parse_args()
-    run(args.output, make_figures=not args.no_figures)
+    run(args.output, make_figures=not args.no_figures,
+        mcs_reps=args.mcs_reps, mcs_block_size=args.mcs_block_size,
+        mcs_size=args.mcs_size)
     return 0
 
 
