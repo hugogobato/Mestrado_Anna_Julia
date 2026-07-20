@@ -1,0 +1,3 @@
+# Opcional: a implementação atual do TSMixerX usa PyTorch nativo para
+# preservar exatamente o índice operacional de 22 pregões.
+neuralforecast>=1.7

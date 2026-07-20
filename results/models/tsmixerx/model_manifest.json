@@ -1,0 +1,80 @@
+{
+  "model": "TSMixerX",
+  "artifacts": [
+    {
+      "window_id": 0,
+      "path": "results/models/tsmixerx/tsmixerx_window_00.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 1,
+      "path": "results/models/tsmixerx/tsmixerx_window_01.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 2,
+      "path": "results/models/tsmixerx/tsmixerx_window_02.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 3,
+      "path": "results/models/tsmixerx/tsmixerx_window_03.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 4,
+      "path": "results/models/tsmixerx/tsmixerx_window_04.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 5,
+      "path": "results/models/tsmixerx/tsmixerx_window_05.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 6,
+      "path": "results/models/tsmixerx/tsmixerx_window_06.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 7,
+      "path": "results/models/tsmixerx/tsmixerx_window_07.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 8,
+      "path": "results/models/tsmixerx/tsmixerx_window_08.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 9,
+      "path": "results/models/tsmixerx/tsmixerx_window_09.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 10,
+      "path": "results/models/tsmixerx/tsmixerx_window_10.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 11,
+      "path": "results/models/tsmixerx/tsmixerx_window_11.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 12,
+      "path": "results/models/tsmixerx/tsmixerx_window_12.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 13,
+      "path": "results/models/tsmixerx/tsmixerx_window_13.pt",
+      "status": "saved"
+    },
+    {
+      "window_id": 14,
+      "path": "results/models/tsmixerx/tsmixerx_window_14.pt",
+      "status": "saved"
+    }
+  ]
+}

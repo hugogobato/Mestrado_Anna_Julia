@@ -1,0 +1,365 @@
+{
+  "models": [
+    {
+      "model": "HAR",
+      "window_id": 0,
+      "path": "results/models/benchmarks/har_window_00.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 0,
+      "path": "results/models/benchmarks/xgboost_window_00.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 0,
+      "path": "results/models/benchmarks/lstm_window_00.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 0,
+      "path": "results/models/benchmarks/garch_window_00.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 1,
+      "path": "results/models/benchmarks/har_window_01.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 1,
+      "path": "results/models/benchmarks/xgboost_window_01.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 1,
+      "path": "results/models/benchmarks/lstm_window_01.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 1,
+      "path": "results/models/benchmarks/garch_window_01.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 2,
+      "path": "results/models/benchmarks/har_window_02.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 2,
+      "path": "results/models/benchmarks/xgboost_window_02.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 2,
+      "path": "results/models/benchmarks/lstm_window_02.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 2,
+      "path": "results/models/benchmarks/garch_window_02.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 3,
+      "path": "results/models/benchmarks/har_window_03.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 3,
+      "path": "results/models/benchmarks/xgboost_window_03.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 3,
+      "path": "results/models/benchmarks/lstm_window_03.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 3,
+      "path": "results/models/benchmarks/garch_window_03.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 4,
+      "path": "results/models/benchmarks/har_window_04.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 4,
+      "path": "results/models/benchmarks/xgboost_window_04.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 4,
+      "path": "results/models/benchmarks/lstm_window_04.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 4,
+      "path": "results/models/benchmarks/garch_window_04.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 5,
+      "path": "results/models/benchmarks/har_window_05.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 5,
+      "path": "results/models/benchmarks/xgboost_window_05.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 5,
+      "path": "results/models/benchmarks/lstm_window_05.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 5,
+      "path": "results/models/benchmarks/garch_window_05.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 6,
+      "path": "results/models/benchmarks/har_window_06.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 6,
+      "path": "results/models/benchmarks/xgboost_window_06.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 6,
+      "path": "results/models/benchmarks/lstm_window_06.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 6,
+      "path": "results/models/benchmarks/garch_window_06.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 7,
+      "path": "results/models/benchmarks/har_window_07.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 7,
+      "path": "results/models/benchmarks/xgboost_window_07.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 7,
+      "path": "results/models/benchmarks/lstm_window_07.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 7,
+      "path": "results/models/benchmarks/garch_window_07.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 8,
+      "path": "results/models/benchmarks/har_window_08.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 8,
+      "path": "results/models/benchmarks/xgboost_window_08.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 8,
+      "path": "results/models/benchmarks/lstm_window_08.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 8,
+      "path": "results/models/benchmarks/garch_window_08.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 9,
+      "path": "results/models/benchmarks/har_window_09.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 9,
+      "path": "results/models/benchmarks/xgboost_window_09.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 9,
+      "path": "results/models/benchmarks/lstm_window_09.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 9,
+      "path": "results/models/benchmarks/garch_window_09.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 10,
+      "path": "results/models/benchmarks/har_window_10.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 10,
+      "path": "results/models/benchmarks/xgboost_window_10.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 10,
+      "path": "results/models/benchmarks/lstm_window_10.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 10,
+      "path": "results/models/benchmarks/garch_window_10.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 11,
+      "path": "results/models/benchmarks/har_window_11.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 11,
+      "path": "results/models/benchmarks/xgboost_window_11.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 11,
+      "path": "results/models/benchmarks/lstm_window_11.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 11,
+      "path": "results/models/benchmarks/garch_window_11.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 12,
+      "path": "results/models/benchmarks/har_window_12.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 12,
+      "path": "results/models/benchmarks/xgboost_window_12.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 12,
+      "path": "results/models/benchmarks/lstm_window_12.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 12,
+      "path": "results/models/benchmarks/garch_window_12.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 13,
+      "path": "results/models/benchmarks/har_window_13.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 13,
+      "path": "results/models/benchmarks/xgboost_window_13.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 13,
+      "path": "results/models/benchmarks/lstm_window_13.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 13,
+      "path": "results/models/benchmarks/garch_window_13.json",
+      "status": "saved"
+    },
+    {
+      "model": "HAR",
+      "window_id": 14,
+      "path": "results/models/benchmarks/har_window_14.json",
+      "status": "saved"
+    },
+    {
+      "model": "XGBoost",
+      "window_id": 14,
+      "path": "results/models/benchmarks/xgboost_window_14.joblib",
+      "status": "saved"
+    },
+    {
+      "model": "LSTM",
+      "window_id": 14,
+      "path": "results/models/benchmarks/lstm_window_14.pt",
+      "status": "saved"
+    },
+    {
+      "model": "GARCH(1,1)",
+      "window_id": 14,
+      "path": "results/models/benchmarks/garch_window_14.json",
+      "status": "saved"
+    }
+  ],
+  "note": "RW, VIX e VIX3M s\u00e3o benchmarks sem pesos trein\u00e1veis."
+}
