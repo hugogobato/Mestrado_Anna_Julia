@@ -1,9 +1,9 @@
 model,included,status,pvalue
 "GARCH(1,1)",True,included,1.0
-HAR,False,excluded,0.003
+HAR,False,excluded,0.002
 LSTM,False,excluded,0.0
 RW,False,excluded,0.004
-TSMixerX,False,excluded,0.003
-VIX,True,included,0.054
+TSMixerX,False,excluded,0.008
+VIX,False,excluded,0.042
 VIX3M,False,excluded,0.0
-XGBoost,False,excluded,0.004
+XGBoost,False,excluded,0.008

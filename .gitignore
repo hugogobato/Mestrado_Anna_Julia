@@ -6,11 +6,12 @@ src/__pycache__/
 *.pyc
 .ipynb_checkpoints/
 results/hp_search/*.db-journal
-results/robustness/
-
 # Documentos auxiliares mantidos fora do repositório de execução.
 code_example_TSMixerX.md
 Mestrado - Anna Julia.md
 ssrn-3776915.pdf
 talk.md
 Timeframe_Hugo.md
+mensagem_whatsapp_resultados.txt
+results/ANALISE_RESULTADOS.md
+results/ANALISE_RESULTADOS.pdf

@@ -1,9 +1,9 @@
 Model name,Pvalue
 LSTM,0.0
 VIX3M,0.0
-TSMixerX,0.003
-HAR,0.003
+HAR,0.002
 RW,0.004
-XGBoost,0.004
-VIX,0.054
+XGBoost,0.008
+TSMixerX,0.008
+VIX,0.042
 "GARCH(1,1)",1.0
