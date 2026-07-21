@@ -1,5 +1,11 @@
 # Pipeline de previsão de volatilidade
 
+> **Experimento diário v2:** o pipeline original descrito abaixo foi preservado
+> integralmente. A nova especificação com uma previsão por pregão, horizonte
+> direto `h=1,...,22`, janelas 8/2/1 e três notebooks Colab retomáveis está em
+> [`experiments/daily_h22/`](experiments/daily_h22/README.md). Os resultados da
+> v2 são gravados em uma árvore separada e não sobrescrevem os outputs v1.
+
 O projeto transforma o painel diário do S&P 500 em observações operacionais de 22 pregões. Cada bloco usa somente a informação disponível até sua última data, e o alvo `rv_yz_forward` é a média da RV_YZ dos 22 pregões estritamente seguintes. O painel resultante tem 296 blocos válidos entre 2000 e 2025, porque os 22 pregões são não sobrepostos e o último bloco não possui horizonte futuro completo.
 
 ## Execução
