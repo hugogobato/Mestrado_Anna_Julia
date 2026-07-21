@@ -86,7 +86,7 @@ def _combine(model_name: str) -> None:
 
 def run(models: list[str], max_steps: int | None = None,
         max_windows: int | None = None, window_ids: list[int] | None = None,
-        time_budget_minutes: float = 60.0, resume: bool = True,
+        time_budget_minutes: float = 20.0, resume: bool = True,
         seed: int = C.SEED) -> None:
     ensure_directories()
     best_path = C.HP_DIR / "best_config.json"
@@ -119,7 +119,7 @@ def run(models: list[str], max_steps: int | None = None,
             elapsed = (time.monotonic() - started) / 60.0
             if elapsed >= safe_start_limit:
                 print("Limite seguro atingido. Nenhum novo ajuste será iniciado; "
-                      "os artefatos concluídos já estão no Drive.")
+                      "os artefatos concluídos já estão no armazenamento da sessão.")
                 for name in models:
                     _combine(name.lower())
                 return
@@ -200,7 +200,7 @@ def main() -> int:
     parser.add_argument("--max-steps", type=int)
     parser.add_argument("--max-windows", type=int)
     parser.add_argument("--window-ids", type=int, nargs="*")
-    parser.add_argument("--time-budget-minutes", type=float, default=60.0)
+    parser.add_argument("--time-budget-minutes", type=float, default=20.0)
     parser.add_argument("--seed", type=int, default=C.SEED)
     parser.add_argument("--no-resume", action="store_true")
     args = parser.parse_args()

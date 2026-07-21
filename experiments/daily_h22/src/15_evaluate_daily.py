@@ -283,7 +283,7 @@ def run(smoke: bool = False, require_complete: bool = False,
     coverage["complete"] = coverage.completed_windows == expected_windows
     coverage.to_csv(C.METRICS_DIR / "model_coverage.csv", index=False)
     if require_complete and not coverage.complete.all():
-        raise RuntimeError("Há modelos com janelas incompletas. Consulte model_coverage.csv e retome o notebook 3.")
+        raise RuntimeError("Há modelos com janelas incompletas. Consulte model_coverage.csv no notebook 2.")
 
     forecasts.to_parquet(C.FORECAST_DIR / "all_models.parquet", index=False)
     metrics = metrics_by_horizon(forecasts)

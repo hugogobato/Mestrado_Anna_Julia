@@ -2,7 +2,7 @@
 
 > **Experimento diário v2:** o pipeline original descrito abaixo foi preservado
 > integralmente. A nova especificação com uma previsão por pregão, horizonte
-> direto `h=1,...,22`, janelas 8/2/1 e três notebooks Colab retomáveis está em
+> direto `h=1,...,22`, janelas 8/2/1 e dois notebooks Colab está em
 > [`experiments/daily_h22/`](experiments/daily_h22/README.md). Os resultados da
 > v2 são gravados em uma árvore separada e não sobrescrevem os outputs v1.
 

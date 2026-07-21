@@ -33,8 +33,8 @@ def _trial_params(trial, max_steps: int) -> dict:
     }
 
 
-def run(target_trials: int = 40, max_steps: int = 400,
-        timeout_minutes: float = 60.0, storage_path: Path | None = None,
+def run(target_trials: int = 25, max_steps: int = 400,
+        timeout_minutes: float = 35.0, storage_path: Path | None = None,
         smoke: bool = False, backup_dir: Path | None = None) -> dict | None:
     import optuna
 
@@ -143,9 +143,9 @@ def run(target_trials: int = 40, max_steps: int = 400,
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--target-trials", type=int, default=40)
+    parser.add_argument("--target-trials", type=int, default=25)
     parser.add_argument("--max-steps", type=int, default=400)
-    parser.add_argument("--timeout-minutes", type=float, default=60.0)
+    parser.add_argument("--timeout-minutes", type=float, default=35.0)
     parser.add_argument("--storage", type=Path)
     parser.add_argument("--backup-dir", type=Path,
                         help="diretório persistente; recebe backup SQLite após cada trial")
