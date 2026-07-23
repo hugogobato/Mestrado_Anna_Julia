@@ -1,0 +1,9 @@
+{
+  "n": 4002,
+  "pearson_vix_vs_volatility": 0.6201764674289773,
+  "spearman_vix_vs_volatility": 0.6689299924340476,
+  "pearson_vix2_vs_variance": 0.5039316019292805,
+  "mean_vix_percent": 18.428718140929536,
+  "mean_realized_volatility_percent": 12.814659223305226,
+  "mean_variance_risk_premium": 0.017293838838096407
+}

@@ -1,0 +1,10 @@
+{
+  "implementation": "arch.bootstrap.MCS",
+  "loss": "MSE",
+  "horizon": 22,
+  "size": 0.05,
+  "reps": 1000,
+  "block_size": 22,
+  "method": "R",
+  "n_common_origins": 4002
+}

@@ -1,0 +1,13 @@
+{
+  "omega": 3.3323547257762875e-06,
+  "alpha": 0.12389831006300987,
+  "beta": 0.8441344545867258,
+  "last_variance": 3.658476370586887e-05,
+  "note": "GARCH daily variance combined with observed/predicted components in each trailing 22-day target window",
+  "window_id": 9,
+  "test_year": 2019,
+  "train_year_start": 2009,
+  "train_year_end": 2016,
+  "val_year_start": 2017,
+  "val_year_end": 2018
+}

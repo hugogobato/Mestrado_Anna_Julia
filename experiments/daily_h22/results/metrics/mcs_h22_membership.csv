@@ -1,0 +1,9 @@
+model,included,pvalue
+"GARCH(1,1)",True,0.3
+HAR,True,0.3
+LSTM,True,0.3
+RW,True,0.3
+TSMixerX,True,0.123
+VIX,True,0.058
+VIX_calibrated,True,1.0
+XGBoost,False,0.003

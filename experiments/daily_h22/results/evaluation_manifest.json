@@ -1,0 +1,84 @@
+{
+  "models": [
+    "GARCH(1,1)",
+    "HAR",
+    "LSTM",
+    "RW",
+    "TSMixerX",
+    "VIX",
+    "VIX_calibrated",
+    "XGBoost"
+  ],
+  "rows": 704352,
+  "coverage": [
+    {
+      "model": "GARCH(1,1)",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "HAR",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "LSTM",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "RW",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "TSMixerX",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "VIX",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "VIX_calibrated",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    },
+    {
+      "model": "XGBoost",
+      "completed_windows": 16,
+      "expected_windows": 16,
+      "complete": true
+    }
+  ],
+  "vix_correlation": {
+    "n": 4002,
+    "pearson_vix_vs_volatility": 0.6201764674289773,
+    "spearman_vix_vs_volatility": 0.6689299924340476,
+    "pearson_vix2_vs_variance": 0.5039316019292805,
+    "mean_vix_percent": 18.428718140929536,
+    "mean_realized_volatility_percent": 12.814659223305226,
+    "mean_variance_risk_premium": 0.017293838838096407
+  },
+  "horizon": 22,
+  "window": "8/2/1",
+  "mcs": {
+    "implementation": "arch.bootstrap.MCS",
+    "loss": "MSE",
+    "horizon": 22,
+    "size": 0.05,
+    "reps": 1000,
+    "block_size": 22,
+    "method": "R",
+    "n_common_origins": 4002
+  }
+}

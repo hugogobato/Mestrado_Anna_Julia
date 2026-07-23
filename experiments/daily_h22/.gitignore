@@ -2,6 +2,7 @@
 # Google Drive e podem ser adicionados explicitamente ao repositório depois.
 data/*
 !data/.gitkeep
-results/*
 !results/.gitkeep
-
+results/*.zip
+results/ANALISE_RESULTADOS_V2.md
+results/ANALISE_RESULTADOS_V2.pdf

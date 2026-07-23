@@ -1,0 +1,21 @@
+{
+  "methods": [
+    "IntegratedGradients",
+    "ShapleyValueSampling_feature_group",
+    "ShapleyValueSampling_lag_group"
+  ],
+  "horizons_integrated_gradients": [
+    1,
+    22
+  ],
+  "shapley_horizons": [
+    1,
+    22
+  ],
+  "windows": [
+    15
+  ],
+  "origins": 1,
+  "integrated_gradients_steps": 16,
+  "shapley_samples": 10
+}

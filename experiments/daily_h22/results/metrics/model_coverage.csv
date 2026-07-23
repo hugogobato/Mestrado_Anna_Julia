@@ -1,0 +1,9 @@
+model,completed_windows,expected_windows,complete
+"GARCH(1,1)",16,16,True
+HAR,16,16,True
+LSTM,16,16,True
+RW,16,16,True
+TSMixerX,16,16,True
+VIX,16,16,True
+VIX_calibrated,16,16,True
+XGBoost,16,16,True
