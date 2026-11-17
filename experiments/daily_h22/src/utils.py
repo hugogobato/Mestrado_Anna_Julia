@@ -93,7 +93,7 @@ def target_matrix(panel: pd.DataFrame, origins: np.ndarray,
     return np.asarray([y[int(pos) + 1:int(pos) + horizon + 1] for pos in origins], dtype=float)
 
 
-def rolling_821_windows(panel: pd.DataFrame) -> list[dict]:
+def rolling_821_windows(panel: pd.DataFrame, purge_boundaries: bool = False) -> list[dict]:
     """Janelas anuais com 8 anos de treino, 2 de validação e 1 de teste."""
     dates = pd.to_datetime(panel["date"])
     years = dates.dt.year.to_numpy()
@@ -108,6 +108,12 @@ def rolling_821_windows(panel: pd.DataFrame) -> list[dict]:
         train = np.flatnonzero((years >= train_start) & (years < train_end) & valid_origin)
         val = np.flatnonzero((years >= train_end) & (years < val_end) & valid_origin)
         test = np.flatnonzero((years == test_year) & valid_origin)
+        if purge_boundaries:
+            # Every target for an origin must be known before the next split.
+            val_boundary = int(np.flatnonzero(years >= train_end)[0])
+            test_boundary = int(np.flatnonzero(years >= val_end)[0])
+            train = train[train + C.HORIZON < val_boundary]
+            val = val[val + C.HORIZON < test_boundary]
         if len(train) and len(val) and len(test):
             windows.append({
                 "window_id": window_id,

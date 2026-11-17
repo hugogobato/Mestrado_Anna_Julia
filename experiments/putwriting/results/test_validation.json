@@ -1,0 +1,13 @@
+{
+  "command": "DAILY_H22_DATA_DIR=\"$PWD/experiments/putwriting/data\" OPENBLAS_NUM_THREADS=2 OMP_NUM_THREADS=2 /tmp/anna-revision-venv/bin/python -m pytest experiments/daily_h22/tests experiments/putwriting/tests -q",
+  "passed": 28,
+  "skipped": 0,
+  "elapsed_seconds": 2.73,
+  "additional_checks": [
+    "all code cells in three Colab notebooks compile",
+    "full downstream run with 2000 bootstrap reps",
+    "deterministic output reconciliation in verification.json",
+    "independent 32-checkpoint load and input provenance audit"
+  ],
+  "local_environment": "/tmp/anna-revision-venv"
+}

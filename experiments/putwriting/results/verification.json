@@ -1,0 +1,37 @@
+{
+  "status": "passed",
+  "strategy_rows": 3924,
+  "contracts": 109,
+  "financial_scenarios": 36,
+  "forecast_models": 9,
+  "h22_origins_per_model": 4002,
+  "source_hashes_match": {
+    "experiments/putwriting/src/audit_market_data.py": true,
+    "experiments/putwriting/src/bootstrap.py": true,
+    "experiments/putwriting/src/build_strategy_forecasts.py": true,
+    "experiments/putwriting/src/compress_forecast_csv.py": true,
+    "experiments/putwriting/src/market_data.py": true,
+    "experiments/putwriting/src/run_revision.py": true,
+    "experiments/putwriting/src/strategy.py": true,
+    "experiments/putwriting/src/validate_revision.py": true,
+    "experiments/putwriting/src/write_results_report.py": true,
+    "experiments/daily_h22/src/11_statistical_benchmarks.py": true,
+    "experiments/daily_h22/src/12_tsmixerx_optuna.py": true,
+    "experiments/daily_h22/src/13_neural_rolling.py": true,
+    "experiments/daily_h22/src/15_evaluate_daily.py": true,
+    "experiments/daily_h22/src/config.py": true,
+    "experiments/daily_h22/src/utils.py": true,
+    "experiments/daily_h22/src/feature_selection.py": true,
+    "experiments/daily_h22/src/models.py": true
+  },
+  "reconciliations": [
+    "previous-session signals",
+    "no 2025 entries",
+    "cash-secured collateral",
+    "cash/premium/payoff accounting",
+    "causal daily interest",
+    "forecast realization agreement",
+    "VIX forecast and VIX IV imply zero VRP"
+  ],
+  "scope": "deterministic output reconciliation; does not validate missing market metadata or prove a profitable strategy"
+}

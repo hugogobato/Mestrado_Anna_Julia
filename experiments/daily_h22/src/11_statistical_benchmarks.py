@@ -18,10 +18,12 @@ from utils import (ensure_directories, forecasts_long, rolling_821_windows,
                    save_json, target_matrix)
 
 
-MODEL_NAMES = ["RW", "HAR", "GARCH(1,1)", "VIX", "VIX_calibrated", "XGBoost"]
+MODEL_NAMES = ["RW", "HAR", "HAR-VIX", "GARCH(1,1)", "VIX", "VIX_calibrated", "XGBoost"]
 
 
 def _artifact_name(path: Path) -> str:
+    if path.is_relative_to(C.REPO_ROOT):
+        return os.path.relpath(path, C.EXPERIMENT_ROOT)
     return str(path.relative_to(C.EXPERIMENT_ROOT)) if path.is_relative_to(C.EXPERIMENT_ROOT) else str(path)
 
 
@@ -44,6 +46,19 @@ def _har_predict(panel: pd.DataFrame, train: np.ndarray, test: np.ndarray) -> tu
     beta, *_ = np.linalg.lstsq(x_train[valid], log_y[valid], rcond=None)
     return np.exp(np.clip(x_test @ beta, -30, 10)), beta
 
+
+
+def _har_vix_predict(panel: pd.DataFrame, train: np.ndarray, test: np.ndarray) -> tuple[np.ndarray, np.ndarray]:
+    # A strict check keeps exactly the original HAR training and test samples.
+    vix = pd.to_numeric(panel["vix"], errors="coerce").to_numpy(float)
+    if not np.isfinite(vix[np.r_[train, test]]).all() or (vix[np.r_[train, test]] < 0).any():
+        raise ValueError("HAR-VIX requires finite nonnegative VIX at every HAR origin")
+    x_train = np.column_stack([_har_design(panel, train), (vix[train] / 100.0) ** 2])
+    x_test = np.column_stack([_har_design(panel, test), (vix[test] / 100.0) ** 2])
+    log_y = np.log(np.maximum(target_matrix(panel, train), C.EPS))
+    valid = np.isfinite(x_train).all(axis=1) & np.isfinite(log_y).all(axis=1)
+    beta, *_ = np.linalg.lstsq(x_train[valid], log_y[valid], rcond=None)
+    return np.exp(np.clip(x_test @ beta, -30, 10)), beta
 
 def _fit_garch_params(returns: np.ndarray) -> dict:
     r = np.asarray(returns, dtype=float)
@@ -193,8 +208,8 @@ def _save_forecast(frame: pd.DataFrame, model: str, window_id: int) -> None:
     frame.to_csv(path.with_suffix(".csv"), index=False)
 
 
-def combine_outputs() -> None:
-    for model in MODEL_NAMES:
+def combine_outputs(models: list[str] | None = None) -> None:
+    for model in models if models is not None else MODEL_NAMES:
         parts = sorted((_partial_path(model, 0).parent).glob(
             f"{model.lower().replace('(1,1)', '_11').replace(',', '').replace(' ', '_')}_window_*.parquet"))
         if not parts:
@@ -207,8 +222,10 @@ def combine_outputs() -> None:
 
 def run(smoke: bool = False, max_windows: int | None = None,
         window_ids: list[int] | None = None, resume: bool = True,
-        time_budget_minutes: float | None = None) -> None:
+        time_budget_minutes: float | None = None,
+        models: list[str] | None = None) -> None:
     ensure_directories()
+    models = MODEL_NAMES if models is None else models
     panel = pd.read_parquet(C.DAILY_PANEL).sort_values("date").reset_index(drop=True)
     windows = rolling_821_windows(panel)
     if window_ids is not None:
@@ -229,12 +246,12 @@ def run(smoke: bool = False, max_windows: int | None = None,
         window_id, train, test = w["window_id"], w["train_idx"], w["test_idx"]
         print(f"Janela {window_id:02d}, teste {w['test_year']}, origens={len(test)}")
 
-        if not (resume and _partial_path("RW", window_id).exists()):
+        if "RW" in models and not (resume and _partial_path("RW", window_id).exists()):
             rw = np.repeat(panel.loc[test, C.TARGET].to_numpy(float)[:, None], C.HORIZON, axis=1)
             _save_forecast(forecasts_long(panel, test, rw, "RW", window_id,
                                           extra_origin_columns=extras), "RW", window_id)
 
-        if not (resume and _partial_path("HAR", window_id).exists()):
+        if "HAR" in models and not (resume and _partial_path("HAR", window_id).exists()):
             pred, beta = _har_predict(panel, train, test)
             artifact = C.MODELS_DIR / "har" / f"har_window_{window_id:02d}.json"
             window_meta = {k: v for k, v in w.items() if not k.endswith("_idx")}
@@ -244,32 +261,43 @@ def run(smoke: bool = False, max_windows: int | None = None,
             _save_forecast(forecasts_long(panel, test, pred, "HAR", window_id,
                                           _artifact_name(artifact), extras), "HAR", window_id)
 
-        if not (resume and _partial_path("GARCH(1,1)", window_id).exists()):
+        if "HAR-VIX" in models and not (resume and _partial_path("HAR-VIX", window_id).exists()):
+            pred, beta = _har_vix_predict(panel, train, test)
+            artifact = C.MODELS_DIR / "har_vix" / f"har_vix_window_{window_id:02d}.json"
+            save_json({"beta": beta.tolist(),
+                       "features": ["const", "log_rv_d", "log_rv_w", "log_rv_m", "vix_variance"],
+                       "vix_transform": "(vix_at_origin / 100)**2, annualized decimal variance",
+                       "target": "log realized variance; exp prediction clipped to [-30, 10]",
+                       **{k: v for k, v in w.items() if not k.endswith("_idx")}}, artifact)
+            _save_forecast(forecasts_long(panel, test, pred, "HAR-VIX", window_id,
+                                          _artifact_name(artifact), extras), "HAR-VIX", window_id)
+
+        if "GARCH(1,1)" in models and not (resume and _partial_path("GARCH(1,1)", window_id).exists()):
             pred, params = _garch_predict(panel, train, test)
             artifact = C.MODELS_DIR / "garch" / f"garch_window_{window_id:02d}.json"
             save_json({**params, **{k: v for k, v in w.items() if not k.endswith('_idx')}}, artifact)
             _save_forecast(forecasts_long(panel, test, pred, "GARCH(1,1)", window_id,
                                           _artifact_name(artifact), extras), "GARCH(1,1)", window_id)
 
-        if not (resume and _partial_path("VIX", window_id).exists()):
+        if "VIX" in models and not (resume and _partial_path("VIX", window_id).exists()):
             pred = _vix_predictions(panel, test)
             _save_forecast(forecasts_long(panel, test, pred, "VIX", window_id,
                                           extra_origin_columns=extras), "VIX", window_id)
 
-        if not (resume and _partial_path("VIX_calibrated", window_id).exists()):
+        if "VIX_calibrated" in models and not (resume and _partial_path("VIX_calibrated", window_id).exists()):
             pred, beta = _vix_calibrated(panel, train, test)
             artifact = C.MODELS_DIR / "vix_calibrated" / f"vix_calibrated_window_{window_id:02d}.json"
             save_json({"beta_by_horizon": beta.tolist(), **{k: v for k, v in w.items() if not k.endswith('_idx')}}, artifact)
             _save_forecast(forecasts_long(panel, test, pred, "VIX_calibrated", window_id,
                                           _artifact_name(artifact), extras), "VIX_calibrated", window_id)
 
-        if not (resume and _partial_path("XGBoost", window_id).exists()):
-            pred, models, metadata = _xgb_predict(panel, train, test, smoke, window_id)
+        if "XGBoost" in models and not (resume and _partial_path("XGBoost", window_id).exists()):
+            pred, xgb_models, metadata = _xgb_predict(panel, train, test, smoke, window_id)
             artifact = C.MODELS_DIR / "xgboost" / f"xgboost_window_{window_id:02d}.joblib"
             artifact.parent.mkdir(parents=True, exist_ok=True)
             try:
                 import joblib
-                joblib.dump({"models": models, "metadata": metadata}, artifact)
+                joblib.dump({"models": xgb_models, "metadata": metadata}, artifact)
                 artifact_rel = _artifact_name(artifact)
             except ImportError:
                 artifact_rel = None
@@ -287,7 +315,7 @@ def run(smoke: bool = False, max_windows: int | None = None,
                     xgb_extras.append(common)
             _save_forecast(forecasts_long(panel, test, pred, "XGBoost", window_id,
                                           artifact_rel, xgb_extras), "XGBoost", window_id)
-    combine_outputs()
+    combine_outputs(models)
 
 
 def main() -> int:
@@ -297,9 +325,10 @@ def main() -> int:
     parser.add_argument("--window-ids", type=int, nargs="*")
     parser.add_argument("--time-budget-minutes", type=float, default=60.0)
     parser.add_argument("--no-resume", action="store_true")
+    parser.add_argument("--models", nargs="+", choices=MODEL_NAMES, default=None)
     args = parser.parse_args()
     run(args.smoke, 1 if args.smoke and args.max_windows is None else args.max_windows,
-        args.window_ids, not args.no_resume, args.time_budget_minutes)
+        args.window_ids, not args.no_resume, args.time_budget_minutes, args.models)
     return 0
 
 

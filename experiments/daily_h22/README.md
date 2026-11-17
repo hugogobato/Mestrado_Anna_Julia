@@ -1,5 +1,12 @@
 # Experimento v2: previsões diárias H=22
 
+> **Revisão de novembro de 2026:** HAR-VIX, Clark-West, auditoria dos dados e
+> estratégia de puts estão em [`../putwriting/`](../putwriting/README.md).
+> A revisão também corrige as fronteiras dos alvos no treino/validação neural:
+> remove 22 origens ao final de cada partição, usa um novo estudo Optuna
+> `daily_h22_purged_steps_400` e `best_config_purged.json`. Os resultados antigos
+> são preservados; a reexecução corrigida fica em `../putwriting/results/neural_purged/`.
+
 Este diretório é independente do pipeline v1 na raiz do repositório. Ele mantém
 uma observação por pregão, prevê os 22 próximos valores da variância
 Yang–Zhang móvel de 22 pregões e avalia os modelos em janelas rolling 8/2/1.

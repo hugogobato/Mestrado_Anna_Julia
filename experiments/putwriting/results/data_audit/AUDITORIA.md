@@ -1,0 +1,9 @@
+# Auditoria dos dados
+
+O ZIP contém cotações de entrada para 120 puts identificadas em datas mensais de rolagem, com ticker, strike, vencimento, bid, ask, mid, último e valor de liquidação informado. Não contém cotações diárias dos mesmos contratos nem campo que confirme liquidação AM/PM. A identificação e a qualidade das cotações devem ser verificadas com a fonte; um mid não é necessariamente preço executável. A série LIVE é volatilidade implícita, não prêmio de opção individual, e PUT.csv é índice, não contrato.
+
+SPX, LIVE e VIX terminam em 2024-12-31, enquanto as rolagens chegam a 2025. Sinais em 2025 não são suportados por essas séries. A tabela de conferência `roll_soq_check.csv` compara o SOQ de cada rolagem com SPX_SOQ pela data efetiva da liquidação, preservando a sexta-feira nominal quando há feriado. `SET_SOQ.csv` tem valores diferentes e não deve ser confundido com SPX_SOQ sem confirmação de identidade; a comparação está em `soq_sources_comparison.csv`.
+
+As séries IV e VIX estão em percentuais anualizados, convertidos para decimais por divisão por 100. O rendimento de T-bill também é fornecido em porcentagem e em decimal, mas a convenção da cotação e do cálculo de juros não está documentada no arquivo. Não há preenchimento automático, deduplicação silenciosa, ou inferência do horário de negociação. As contagens de cobertura, lacunas e comparações com master estão nos CSVs.
+
+Na planilha de previsão, o painel atribui valores macro mensais a datas anteriores ao fim do mês de referência (por exemplo janeiro de 2000 já em 3 de janeiro); datas de divulgação e revisões não foram fornecidas. Essas variáveis não são comprovadamente disponíveis em tempo real. O arquivo `missing_daily_option_quotes_template.csv` especifica campos adicionais para marcação diária e identificação de contratos.

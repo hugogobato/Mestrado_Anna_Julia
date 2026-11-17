@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 import time
@@ -15,11 +16,58 @@ import config as C
 from feature_selection import select_features
 from models import DirectVolatilityRegressor
 from utils import (build_sequences, ensure_directories, forecasts_long,
-                   rolling_821_windows, save_json)
+                   rolling_821_windows, save_json, write_split_manifest)
+
+
+def _sha256(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as stream:
+        for chunk in iter(lambda: stream.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+def _guard_resume_policy(results_dir: Path, panel_path: Path, config_path: Path,
+                         split_policy: str, seed: int, max_steps: int) -> dict:
+    """Require one immutable provenance policy for every neural partial.
+
+    Never adopt existing partial files with absent or different provenance, even
+    for a no-resume run: the combiner reads all partials for a model.
+    """
+    results_dir = Path(results_dir)
+    policy_path = results_dir / "neural_resume_policy.json"
+    source_dir = Path(__file__).resolve().parent
+    policy = {
+        "version": 1,
+        "panel_sha256": _sha256(Path(panel_path)),
+        "best_config_sha256": _sha256(Path(config_path)),
+        "split_policy": split_policy,
+        "seed": int(seed),
+        "max_steps": int(max_steps),
+        "source_sha256": {name: _sha256(source_dir / name) for name in
+                          ("13_neural_rolling.py", "models.py", "utils.py",
+                           "feature_selection.py", "config.py")},
+    }
+    partial_dir = results_dir / "forecasts" / "partial"
+    partials = list(partial_dir.glob("tsmixerx_window_*.parquet")) + list(partial_dir.glob("lstm_window_*.parquet"))
+    existing = None
+    if policy_path.exists():
+        try:
+            existing = json.loads(policy_path.read_text(encoding="utf-8"))
+        except (ValueError, OSError) as exc:
+            raise ValueError("Invalid neural resume policy; use a fresh results directory") from exc
+    if partials and existing != policy:
+        raise ValueError("Neural partials have absent or incompatible provenance; use a fresh results directory")
+    if not partials and existing != policy:
+        results_dir.mkdir(parents=True, exist_ok=True)
+        tmp = policy_path.with_suffix(".json.tmp")
+        tmp.write_text(json.dumps(policy, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+        tmp.replace(policy_path)
+    return policy
 
 
 def _artifact_name(path: Path) -> str:
-    return str(path.relative_to(C.EXPERIMENT_ROOT)) if path.is_relative_to(C.EXPERIMENT_ROOT) else str(path)
+    return str(path.relative_to(C.REPO_ROOT)) if path.is_relative_to(C.REPO_ROOT) else str(path)
 
 
 def _partial_path(model: str, window_id: int) -> Path:
@@ -89,13 +137,17 @@ def run(models: list[str], max_steps: int | None = None,
         time_budget_minutes: float = 20.0, resume: bool = True,
         seed: int = C.SEED) -> None:
     ensure_directories()
-    best_path = C.HP_DIR / "best_config.json"
+    best_path = C.HP_DIR / "best_config_purged.json"
     if not best_path.exists():
-        raise FileNotFoundError("Execute primeiro 12_tsmixerx_optuna.py; best_config.json ausente.")
+        raise FileNotFoundError("Execute primeiro 12_tsmixerx_optuna.py; best_config_purged.json ausente.")
     best = json.loads(best_path.read_text(encoding="utf-8"))
+    if best.get("split_policy") != "purged_train_validation_and_validation_test_h22_v1":
+        raise ValueError("Configuração incompatível com splits purgados; execute nova busca.")
     max_steps = int(max_steps or best.get("max_steps", 400))
+    _guard_resume_policy(C.RESULTS_DIR, C.DAILY_PANEL, best_path, best["split_policy"], seed, max_steps)
     panel = pd.read_parquet(C.DAILY_PANEL).sort_values("date").reset_index(drop=True)
-    windows = rolling_821_windows(panel)
+    windows = rolling_821_windows(panel, purge_boundaries=True)
+    write_split_manifest(panel, windows, C.RESULTS_DIR / "purged_split_manifest.csv")
     if window_ids is not None:
         windows = [w for w in windows if w["window_id"] in window_ids]
     if max_windows is not None:
@@ -151,6 +203,7 @@ def run(models: list[str], max_steps: int | None = None,
                 "target": C.TARGET,
                 "horizon": C.HORIZON,
                 "target_transform": "log variance",
+                "split_policy": best["split_policy"],
             }
             estimator.save(artifact, selected, metadata)
             history = estimator.history_frame(model=model_name, window_id=w["window_id"],
@@ -204,6 +257,8 @@ def main() -> int:
     parser.add_argument("--seed", type=int, default=C.SEED)
     parser.add_argument("--no-resume", action="store_true")
     args = parser.parse_args()
+    import torch
+    torch.set_num_threads(2)
     run(args.models, args.max_steps, args.max_windows, args.window_ids,
         args.time_budget_minutes, not args.no_resume, args.seed)
     return 0

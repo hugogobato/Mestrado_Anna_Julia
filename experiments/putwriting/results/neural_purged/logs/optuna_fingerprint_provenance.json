@@ -1,0 +1,9 @@
+{
+  "fresh_study": "daily_h22_purged_steps_400",
+  "fresh_launch_confirmed": true,
+  "trials_at_completion": 25,
+  "fingerprint_attached_after_run": true,
+  "reason": "Resume guard was added after this fresh run completed; no fitting or trial logic was changed.",
+  "original_launch_hashes": "optuna_launch_sha256.txt",
+  "current_fingerprint": "../hp_search/best_config_purged.json study_fingerprint"
+}

@@ -1,0 +1,11 @@
+{
+  "scope": "index paths only; no option repricing, strategy simulation, or model refitting",
+  "n_prices": 6289,
+  "n_returns": 6288,
+  "num_blocks_requested": 20,
+  "block_length": 315,
+  "blocks_per_draw": 20,
+  "n_bootstrap": 2000,
+  "seed": 42,
+  "volatility_annualization": 252
+}

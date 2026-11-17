@@ -1,0 +1,342 @@
+[
+  {
+    "file": "results/forecast_revision/forecasts/har-vix.csv.gz",
+    "original_bytes": 24087455,
+    "original_sha256": "27845c4ead1c5a58e1b319ca643b8cfd548f31121006cecd74167b1b753e3e82"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/har.csv.gz",
+    "original_bytes": 23028443,
+    "original_sha256": "ead374e278b88ba8e356778e0cbd3ebc442ebc30ef8ab71d955b3df6bfb8f9fe"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_00.csv.gz",
+    "original_bytes": 1511833,
+    "original_sha256": "f74732fc3bdcfc47a1b10c14003409e21ff7ff8c7ab383351c69a4feb3cd77ca"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_01.csv.gz",
+    "original_bytes": 1511964,
+    "original_sha256": "4ee96e78a4123e2fb94047191dc5722cd17bdf08f26d43d480a18eed2b59cdbb"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_02.csv.gz",
+    "original_bytes": 1508289,
+    "original_sha256": "dcbcef13ba972b105d441b925f4d510ef64322de4bd972765f6dfa94efe21570"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_03.csv.gz",
+    "original_bytes": 1520445,
+    "original_sha256": "4cdae3d477ee13d923f187bce5fa37b3a4e5079c9366050f2314fbb575d69930"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_04.csv.gz",
+    "original_bytes": 1519232,
+    "original_sha256": "2704888c8500c3c93df2c8a2a1b8e94c0ef6a8cd58af4b0d6daf3d3aff812ecb"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_05.csv.gz",
+    "original_bytes": 1514820,
+    "original_sha256": "ffd68b73d42f18549e0e99a67baf76192c9efd0f417e2f9aeac6b22a2c07f290"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_06.csv.gz",
+    "original_bytes": 1518233,
+    "original_sha256": "5f8aaf37030134a57c04342b83878d9e40b8a326d0df29e1708a3ebc125eb1fb"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_07.csv.gz",
+    "original_bytes": 1517131,
+    "original_sha256": "e79cfc0b3f38b9f35cda43bddd2bf0927ad65f095338e72a2e0f7a6ad7c5a995"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_08.csv.gz",
+    "original_bytes": 1506037,
+    "original_sha256": "d0818883054bf24ced0c012461154b92d5957b72ea16b27ebfc673da5db29caa"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_09.csv.gz",
+    "original_bytes": 1518559,
+    "original_sha256": "206faac8385422cfa04a0ca6ef1995ff0dd647a35f88fc80e4b1e01c0697ccbb"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_10.csv.gz",
+    "original_bytes": 1511487,
+    "original_sha256": "bb389eae5b74eec15ee884783a4c5efa76ad342b32457f8f56d7ba5f33ade666"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_11.csv.gz",
+    "original_bytes": 1520898,
+    "original_sha256": "60812d38b8b2accf667a66611078f1286eefbadd05710a15396864335dc9facf"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_12.csv.gz",
+    "original_bytes": 1504849,
+    "original_sha256": "d2cf830d0c01887a901d67bf91d96e8265bbb80fc2d298572408c29d2c9c3998"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_13.csv.gz",
+    "original_bytes": 1512201,
+    "original_sha256": "053a9b24af86037c38fbaccad8b884a48735d388f2df7b6577f589bcd5289300"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_14.csv.gz",
+    "original_bytes": 1522799,
+    "original_sha256": "e374ecc19e820ac9dc10151efacaeed5849bf60ab5083a8432cc39251abb3d22"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har-vix_window_15.csv.gz",
+    "original_bytes": 1371333,
+    "original_sha256": "aad39f266bb3fc66123d8450146c9760aa071dd715c69485b45b08c379526acc"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_00.csv.gz",
+    "original_bytes": 1444981,
+    "original_sha256": "0fe4799b25931b4122c43ac85c66d8cd013ad7d9823df78417c0265ab833818e"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_01.csv.gz",
+    "original_bytes": 1445104,
+    "original_sha256": "0ec5b0c445d5d12c3f49aaabcc439f9c22dc54d4e6677bf4519391c87c677c8d"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_02.csv.gz",
+    "original_bytes": 1442034,
+    "original_sha256": "c492d10c4cf0c40409aa57f6e315067452c74e25a16ae53d3e14a094c2c20fc1"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_03.csv.gz",
+    "original_bytes": 1454309,
+    "original_sha256": "c231ddec2b4fa85d616ea3b98e3a191b725f2811a09eaf520e9dc981325ed2d9"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_04.csv.gz",
+    "original_bytes": 1452489,
+    "original_sha256": "032b838abfafc45a50b2b89733f08a1f6b4101a41e8431a823e487f9b6ca2a6f"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_05.csv.gz",
+    "original_bytes": 1447682,
+    "original_sha256": "04007d905565e671909319f075533b58380db4cae89f050e11cf3dea66140010"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_06.csv.gz",
+    "original_bytes": 1451473,
+    "original_sha256": "4e3e68cf843720b7f9ad31a0974179252aa779bc334713b7515c45c001922495"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_07.csv.gz",
+    "original_bytes": 1452610,
+    "original_sha256": "68931e9814b7f080b582f2cf93b57f1ae2745272a6fc9e553eddc83a713d1635"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_08.csv.gz",
+    "original_bytes": 1439191,
+    "original_sha256": "d145aaca477d60066eedd226442c728e04a16aca8ac2eb26b97beec26f373c5a"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_09.csv.gz",
+    "original_bytes": 1450172,
+    "original_sha256": "6faa3586740f8bd3c3d9a67835a8adf8932b2455e1fb70490806b0ef98e22ad1"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_10.csv.gz",
+    "original_bytes": 1447372,
+    "original_sha256": "56ee37faa7dc4a03b66c093ac55cab753f4b082ca6f9e2b96185e7f28fe782b1"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_11.csv.gz",
+    "original_bytes": 1454264,
+    "original_sha256": "edf1df5680a4f5a623144885367c250e9ff043a2b12f6840cb02709a883192a0"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_12.csv.gz",
+    "original_bytes": 1437734,
+    "original_sha256": "f14720cff9786923dc8a2a5620a579c9c1c921486adc01bc31b77e33f3512c70"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_13.csv.gz",
+    "original_bytes": 1445748,
+    "original_sha256": "3b48cc66057c4a16516ecb9b76366bc6dd70139b74de0d12d1b7ff4f8db23351"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_14.csv.gz",
+    "original_bytes": 1455025,
+    "original_sha256": "7c3c1380d2dd68ae1561ac14a7ec8b060c04ff65bd031fd504857db686c269b1"
+  },
+  {
+    "file": "results/forecast_revision/forecasts/partial/har_window_15.csv.gz",
+    "original_bytes": 1310910,
+    "original_sha256": "7d7ec27f6fc35142dac6046ac355374ac4b8363b7c008178384192b081dd1d7e"
+  },
+  {
+    "file": "results/neural_purged/forecasts/lstm.csv.gz",
+    "original_bytes": 71279882,
+    "original_sha256": "46ae9a3ad5c5c0e413ce3266a886a0a059240d4ac9c32ef769a0fea5b3d04683"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_00.csv.gz",
+    "original_bytes": 4384237,
+    "original_sha256": "92d445f82ef03a3608e9fc38473fe19fd1c4932de88e9b6c454e066bb3284fd9"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_01.csv.gz",
+    "original_bytes": 4338744,
+    "original_sha256": "a9d535be1acc00a83bc13a4caf6eec9953fefa5c707f67a193d7b77cacc64c68"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_02.csv.gz",
+    "original_bytes": 4430208,
+    "original_sha256": "d8aeade1129c9f0d38e9fe0e6d8252137229f8d6f153c73e02fbe7c692d123bd"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_03.csv.gz",
+    "original_bytes": 4469925,
+    "original_sha256": "90483b6d515e5b474b58e3b8b685398095322f672f46b97da90c358c1f167630"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_04.csv.gz",
+    "original_bytes": 4481581,
+    "original_sha256": "f4cdc4717bf05c004e003a6a1df944ed8e7a99bce4c280561986be360b61caf9"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_05.csv.gz",
+    "original_bytes": 4470953,
+    "original_sha256": "34fac53cc5649edd2c9b493ce1e5c63a52abd2705dbb20959d0c4b66a0994e45"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_06.csv.gz",
+    "original_bytes": 4463978,
+    "original_sha256": "74ae11e0b541bc08987d61faedb3432d7b74a15e01dec90801bbc92c9a692894"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_07.csv.gz",
+    "original_bytes": 4421259,
+    "original_sha256": "a1724ab961b56a6d71232e7c7550e04cdd074fd4eb1e5a559bd99e7e5564a798"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_08.csv.gz",
+    "original_bytes": 4409756,
+    "original_sha256": "f1d3982a1963c51c1bead28a2173aca64a334a0d12a378c7b241c23a5a3e8872"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_09.csv.gz",
+    "original_bytes": 4429395,
+    "original_sha256": "6380d3fabe1d92085016ef45e57ed899f39d6b4e43816565373c8d9029f970ac"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_10.csv.gz",
+    "original_bytes": 4464264,
+    "original_sha256": "6770faaae59a86a817c123ffacb52ece7c6a5dea68ffc751d5ab3747cea9481f"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_11.csv.gz",
+    "original_bytes": 4442664,
+    "original_sha256": "6f992d6c745cc310cda5c89e21a9df60afaccf04baade73124630034903285cb"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_12.csv.gz",
+    "original_bytes": 4405328,
+    "original_sha256": "89350d8ba019177b81cbaf5ce30637eda97a19c84288c2332f7863a8a2610242"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_13.csv.gz",
+    "original_bytes": 4460973,
+    "original_sha256": "693c59302d6917987b94375521de79fcc22e8d953f4652e59b5e4d6fd5c2902b"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_14.csv.gz",
+    "original_bytes": 4501829,
+    "original_sha256": "eb5a554f75cb0edb036dda14dd4a65908ab7a4dbe216fa0626ea7d288e689acf"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/lstm_window_15.csv.gz",
+    "original_bytes": 4115861,
+    "original_sha256": "23ef3d1d189e7f2cfa31aa77f37435a211b2e8e97e6dc6a8a69fcf8890747c66"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_00.csv.gz",
+    "original_bytes": 4449388,
+    "original_sha256": "f78482aeb8c647d2cafa8f3a763aa92a781bc09f6a4901d482c1f38855f8b2b7"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_01.csv.gz",
+    "original_bytes": 4408873,
+    "original_sha256": "9bc16299f9332da2967a1d69df5c54adddfbd7fd8db1d00e608ac49344af0aa4"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_02.csv.gz",
+    "original_bytes": 4498761,
+    "original_sha256": "7548fe88581b4df609d62c24819c24d6a8a5d142414f9dd5b278e0be07601ae2"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_03.csv.gz",
+    "original_bytes": 4534043,
+    "original_sha256": "408c6cc8b5f6cf5711d8ea40a718968635bf1cbb5bc0597564f977341e2eca73"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_04.csv.gz",
+    "original_bytes": 4549031,
+    "original_sha256": "295d6398c0ddcac2591e4d5c807c559976aa58e78e92f22b6c93848d4594772e"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_05.csv.gz",
+    "original_bytes": 4541120,
+    "original_sha256": "0cc546825142a2da22157ad6e917c4407526c6367563116a2c6609d3874ab103"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_06.csv.gz",
+    "original_bytes": 4532672,
+    "original_sha256": "418c82c9712eeee7297285f399609594b4f87c3f6c5648d2193cda817cf8ea32"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_07.csv.gz",
+    "original_bytes": 4496678,
+    "original_sha256": "3d180e5d3f06bf74032a12261d680c7ee20944311dd334fe39055fd75bc61ac1"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_08.csv.gz",
+    "original_bytes": 4477746,
+    "original_sha256": "52223151ddf16d02dd8861234935e09f223e9b24a8e99ba9dc8d2ae57f22e16b"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_09.csv.gz",
+    "original_bytes": 4498300,
+    "original_sha256": "ea99bea6b27931f44218adda559e472594ecee548e46eb288e0b99d1d3855578"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_10.csv.gz",
+    "original_bytes": 4530337,
+    "original_sha256": "c19ee2f95426799980f0617aa86205b5c29040c66739c61b5d2573c81dfa3516"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_11.csv.gz",
+    "original_bytes": 4515466,
+    "original_sha256": "15ac764a4c7d93591b30dfd1bfdc6f99a23c3b0e25c9043d786eca8e8b046305"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_12.csv.gz",
+    "original_bytes": 4471898,
+    "original_sha256": "d1ab445a06678dce5e1e0d7c4a87bf208dd05ac865be9ad451f836698958d454"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_13.csv.gz",
+    "original_bytes": 4530688,
+    "original_sha256": "05a5b6476cb9a1ebd784acc8845552819bdb7c7ed7558ece024dec403c9b9117"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_14.csv.gz",
+    "original_bytes": 4566976,
+    "original_sha256": "8e21ee18e8c8949a3ee119d17832f6e8cf303c1c3f4cef8649dc8d742ee49ad1"
+  },
+  {
+    "file": "results/neural_purged/forecasts/partial/tsmixerx_window_15.csv.gz",
+    "original_bytes": 4180366,
+    "original_sha256": "986856a2c2a538cc9d17cb5d7643a7d73913f1f5e29226fdc818c0343569f5b3"
+  },
+  {
+    "file": "results/neural_purged/forecasts/tsmixerx.csv.gz",
+    "original_bytes": 72371270,
+    "original_sha256": "0a48d7eee19b68b452b917bce9f353900d2f1d805b32006c69b5bd8477c666dc"
+  }
+]

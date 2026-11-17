@@ -251,7 +251,7 @@ MAX_STEPS = {'smoke': 30, 'validation': 200, 'final': 400}[RUN_MODE]
 OPTUNA_BUDGET_MINUTES = {'smoke': 5, 'validation': 15, 'final': 35}[RUN_MODE]
 NEURAL_BUDGET_MINUTES = {'smoke': 5, 'validation': 10, 'final': 20}[RUN_MODE]
 MAX_WINDOWS = {'smoke': 1, 'validation': 2, 'final': None}[RUN_MODE]
-LOCAL_DB = RESULTS_DIR / 'hp_search/tsmixerx_daily.db'
+LOCAL_DB = RESULTS_DIR / 'hp_search/tsmixerx_daily_purged.db'
 print(RUN_MODE, TARGET_TRIALS, MAX_STEPS,
       OPTUNA_BUDGET_MINUTES, NEURAL_BUDGET_MINUTES)
 '''),
@@ -272,9 +272,9 @@ run_script('12_tsmixerx_optuna.py', *optuna_args)
 '''),
     markdown("""## Melhor configuração"""),
     code(r'''import json, pandas as pd
-best_path = RESULTS_DIR / 'hp_search/best_config.json'
+best_path = RESULTS_DIR / 'hp_search/best_config_purged.json'
 if not best_path.exists():
-    raise FileNotFoundError('A busca não produziu best_config.json')
+    raise FileNotFoundError('A busca não produziu best_config_purged.json')
 best = json.loads(best_path.read_text())
 print(json.dumps(best, indent=2))
 trial_files = sorted((RESULTS_DIR / 'hp_search').glob('trials_*.csv'))

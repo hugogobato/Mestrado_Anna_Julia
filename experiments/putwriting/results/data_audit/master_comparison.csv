@@ -1,0 +1,3 @@
+comparison,overlapping_dates,comparable,different_gt_1e-6,max_abs_difference
+master_sp500_vs_spx_close,6290,6289,0,0.0
+master_sp500_vs_vix,6289,6289,0,0.0

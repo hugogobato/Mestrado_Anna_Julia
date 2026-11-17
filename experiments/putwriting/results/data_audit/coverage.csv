@@ -1,0 +1,10 @@
+table,rows,start,end,key,duplicate_keys
+spx,6290,2000-01-03,2024-12-31,date,0
+iv,5033,2005-01-03,2024-12-31,date,0
+vix,6308,2000-01-03,2024-12-31,date,0
+tbill,4697,2008-01-01,2025-12-31,date,0
+put_index,4529,2008-01-02,2025-12-31,date,0
+rolls,120,2015-12-18,2025-11-21,roll_date,0
+settlement,216,2008-01-18,2025-12-19,third_friday,0
+set_soq,209,2008-01-18,2025-12-19,expiry,0
+master,56272,1993-01-04,2024-12-31,"asset,date",0

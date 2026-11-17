@@ -1,0 +1,254 @@
+{
+  "archive_sha256": "defacfc0fa86ae4894d9c8754ab915d54235ef021bf6f90d15f9bd85add9d49a",
+  "sources": [
+    {
+      "member": "BASES DE DADOS/SPX_SOQ.csv",
+      "bytes": 6466,
+      "sha256": "4510b88e27a21d70c38af14e2e4f1fe30a95565145e10575f2d4a54f6c4bfcca",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/PUT.csv",
+      "bytes": 84950,
+      "sha256": "1166c5b3e1b93a07ea59cca51525e18de3d119df83beab79115e3d7cf836cd07",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/SET_SOQ.csv",
+      "bytes": 3928,
+      "sha256": "923902952423160a2b2e6d3da46d7986cc898e3f41d8f3898f3a68b42a29c43b",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/putwrite_rolls.csv",
+      "bytes": 12404,
+      "sha256": "99dd3d04594148584ec2e5a5ab12e11671296539755777459cc1b1883a58e6c2",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/TBILL1M.csv",
+      "bytes": 83909,
+      "sha256": "aa38e0e9c02d02c2e51f8dc68e32226dc760f20cdfce798cc14b6eb7a3835d83",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/VIX.csv",
+      "bytes": 106574,
+      "sha256": "0ed35c7c56200e58691efce9464e8e0ef3cadae80211cf412af168db9ffd828b",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/SPX_ATM1M.csv",
+      "bytes": 94495,
+      "sha256": "3aefae985301d913dc432b32a741023c3cc47e6bc53ba5279efb7a71fb92efec",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/SPX.csv",
+      "bytes": 343896,
+      "sha256": "f1d4b3bf8fc03c18b30c5236636362570a882a7f41621b052459e144db6b74ec",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/master.csv",
+      "bytes": 11275533,
+      "sha256": "1fa32e432867c2992a9ca2078e4d9f72689f1fda0559ae1a2a7a7ea7435352dd",
+      "delimiter": ","
+    },
+    {
+      "member": "BASES DE DADOS/Base de Dados Modelo Preditivo/base de dados dissertação.xlsx",
+      "bytes": 3944258,
+      "sha256": "a386785f47fb609178581182b6c1c377496194674ee56234a615e79c0b92bf04",
+      "delimiter": null
+    }
+  ],
+  "coverage": [
+    {
+      "table": "spx",
+      "rows": 6290,
+      "start": "2000-01-03",
+      "end": "2024-12-31",
+      "key": "date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "iv",
+      "rows": 5033,
+      "start": "2005-01-03",
+      "end": "2024-12-31",
+      "key": "date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "vix",
+      "rows": 6308,
+      "start": "2000-01-03",
+      "end": "2024-12-31",
+      "key": "date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "tbill",
+      "rows": 4697,
+      "start": "2008-01-01",
+      "end": "2025-12-31",
+      "key": "date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "put_index",
+      "rows": 4529,
+      "start": "2008-01-02",
+      "end": "2025-12-31",
+      "key": "date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "rolls",
+      "rows": 120,
+      "start": "2015-12-18",
+      "end": "2025-11-21",
+      "key": "roll_date",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "settlement",
+      "rows": 216,
+      "start": "2008-01-18",
+      "end": "2025-12-19",
+      "key": "third_friday",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "set_soq",
+      "rows": 209,
+      "start": "2008-01-18",
+      "end": "2025-12-19",
+      "key": "expiry",
+      "duplicate_keys": 0
+    },
+    {
+      "table": "master",
+      "rows": 56272,
+      "start": "1993-01-04",
+      "end": "2024-12-31",
+      "key": "asset,date",
+      "duplicate_keys": 0
+    }
+  ],
+  "master_comparisons": [
+    {
+      "comparison": "master_sp500_vs_spx_close",
+      "overlapping_dates": 6290,
+      "comparable": 6289,
+      "different_gt_1e-6": 0,
+      "max_abs_difference": 0.0
+    },
+    {
+      "comparison": "master_sp500_vs_vix",
+      "overlapping_dates": 6289,
+      "comparable": 6289,
+      "different_gt_1e-6": 0,
+      "max_abs_difference": 0.0
+    }
+  ],
+  "workbook_sheets": {
+    "painel_diario": [
+      "date",
+      "spx_open",
+      "spx_high",
+      "spx_low",
+      "spx_close",
+      "spy_volume",
+      "vix",
+      "vix3m",
+      "fed_funds",
+      "ust_3m",
+      "ust_10y",
+      "baa",
+      "aaa",
+      "ndx_close",
+      "indu_close",
+      "nky_close",
+      "ukx_close",
+      "wti_close",
+      "gold_close",
+      "dxy",
+      "industrial_production",
+      "cpi",
+      "unemployment",
+      "stress_index",
+      "epu",
+      "ret_spx_simple",
+      "ret_spx_log",
+      "ret_spx_abs",
+      "ret_ndx_simple",
+      "ret_ndx_log",
+      "ret_indu_simple",
+      "ret_indu_log",
+      "ret_nky_simple",
+      "ret_nky_log",
+      "ret_ukx_simple",
+      "ret_ukx_log",
+      "ret_wti_simple",
+      "ret_wti_log",
+      "ret_gold_simple",
+      "ret_gold_log",
+      "ret_dxy_simple",
+      "ret_dxy_log",
+      "retorno_acum_22d",
+      "rv_diaria",
+      "rv_semanal",
+      "rv_mensal",
+      "rolling_std_22d",
+      "parkinson",
+      "garman_klass",
+      "rogers_satchell",
+      "true_range",
+      "atr_14",
+      "volume_medio_22d",
+      "obv",
+      "rsi_14",
+      "macd",
+      "roc_10",
+      "adx_14",
+      "bollinger_width_20",
+      "vix_term_spread",
+      "yield_slope",
+      "baa_aaa_spread"
+    ],
+    "macro": [
+      "date_ref_mensal",
+      "industrial_production",
+      "cpi",
+      "unemployment",
+      "Unnamed: 4",
+      "date_ref_semanal",
+      "stress_index"
+    ],
+    "dicionario": [
+      "nome_coluna",
+      "tipo",
+      "formula_ou_calculo",
+      "insumos",
+      "fonte",
+      "ticker_sugerido",
+      "data_inicial_real",
+      "frequencia",
+      "observacoes"
+    ]
+  },
+  "roll_soq": {
+    "rows": 120,
+    "missing_spx_soq": 0,
+    "mismatch_gt_1e-6": 0,
+    "nominal_friday_differs_from_settle_date": 3
+  },
+  "rolls": {
+    "quote_after_roll": 0,
+    "quote_before_roll": 0,
+    "expiry_not_after_roll": 0,
+    "bid_gt_ask": 0,
+    "mid_not_bid_ask_average": 0
+  }
+}

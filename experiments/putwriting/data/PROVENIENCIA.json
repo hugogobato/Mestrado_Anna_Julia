@@ -1,0 +1,20 @@
+{
+  "description": "Este arquivo documenta o painel e as oito previsões preservadas da execução v2 anterior. As previsões neurais corrigidas desta revisão substituem LSTM/TSMixerX exclusivamente em strategy_forecasts_h22.parquet, cuja proveniência está em strategy_forecasts_provenance.json.",
+  "archive_name": "daily_h22_final_results.zip",
+  "archive_sha256": "9da9a9847db4b1a3bcd59e8f0e7d0f3f754aaec210e6e4a6f4872eaf1c59be69",
+  "members_sha256": {
+    "data/daily_panel.parquet": "bc60a958f8d662c445ba39a2dad3e89897f286bc42a4ce83ed7c5aef0f1d2b2f",
+    "data/split_manifest.csv": "05bc42abee57cfaf4076b928ae95933c749c73f61357464c4bb8603d3766fd52",
+    "results/forecasts/all_models.parquet": "1120e9fdd1612768726572ffa5e391affbcf2cf664359d933012b5ae8aa5661c"
+  },
+  "root_workbook_identical_to_input_zip": true,
+  "forecast_columns": [
+    "model",
+    "window_id",
+    "origin_date",
+    "target_date",
+    "horizon",
+    "y",
+    "y_hat"
+  ]
+}

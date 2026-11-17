@@ -1,8 +1,3 @@
-# Artefatos locais e smoke tests. Os resultados finais do Colab ficam no
-# Google Drive e podem ser adicionados explicitamente ao repositório depois.
+# O painel intermediário pode ser regenerado. Resultados não são ignorados.
 data/*
 !data/.gitkeep
-!results/.gitkeep
-results/*.zip
-results/ANALISE_RESULTADOS_V2.md
-results/ANALISE_RESULTADOS_V2.pdf

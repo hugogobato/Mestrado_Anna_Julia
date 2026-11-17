@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
+import json
 import sqlite3
 import sys
 from pathlib import Path
@@ -13,8 +15,21 @@ import config as C
 from feature_selection import select_features
 from models import DirectVolatilityRegressor
 from utils import (build_sequences, ensure_directories, rolling_821_windows,
-                   save_json)
+                   save_json, write_split_manifest)
 
+
+
+def _study_fingerprint(max_steps: int) -> dict:
+    """Identify the data and source used by resumable purged tuning."""
+    src = Path(__file__).resolve().parent
+    files = [Path(__file__).resolve(), src / "models.py", src / "utils.py",
+             src / "feature_selection.py", src / "config.py", C.DAILY_PANEL]
+    return {
+        "sha256": {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in files},
+        "split_policy": "purged_train_validation_and_validation_test_h22_v1",
+        "horizon": C.HORIZON, "seed": C.SEED, "max_steps": max_steps,
+        "input_sizes": C.INPUT_SIZES,
+    }
 
 def _trial_params(trial, max_steps: int) -> dict:
     return {
@@ -40,11 +55,13 @@ def run(target_trials: int = 25, max_steps: int = 400,
 
     ensure_directories()
     panel = pd.read_parquet(C.DAILY_PANEL).sort_values("date").reset_index(drop=True)
-    first = rolling_821_windows(panel)[0]
+    windows = rolling_821_windows(panel, purge_boundaries=True)
+    write_split_manifest(panel, windows, C.RESULTS_DIR / "purged_split_manifest.csv")
+    first = windows[0]
     train, val = first["train_idx"], first["val_idx"]
     if smoke:
         target_trials, max_steps = min(target_trials, 3), min(max_steps, 30)
-    storage_path = Path(storage_path or (C.HP_DIR / "tsmixerx_daily.db")).resolve()
+    storage_path = Path(storage_path or (C.HP_DIR / "tsmixerx_daily_purged.db")).resolve()
     storage_path.parent.mkdir(parents=True, exist_ok=True)
     backup_path = None
     if backup_dir is not None:
@@ -54,7 +71,7 @@ def run(target_trials: int = 25, max_steps: int = 400,
         if backup_path.exists() and not storage_path.exists():
             with sqlite3.connect(backup_path) as source, sqlite3.connect(storage_path) as destination:
                 source.backup(destination)
-    study_name = f"daily_h22_steps_{max_steps}"
+    study_name = f"daily_h22_purged_steps_{max_steps}"
     study = optuna.create_study(
         direction="minimize",
         study_name=study_name,
@@ -64,6 +81,14 @@ def run(target_trials: int = 25, max_steps: int = 400,
         pruner=optuna.pruners.MedianPruner(n_startup_trials=5, n_warmup_steps=100,
                                            interval_steps=20),
     )
+    fingerprint = _study_fingerprint(max_steps)
+    previous = study.user_attrs.get("purged_fingerprint")
+    if previous is None:
+        if study.trials:
+            raise RuntimeError("Estudo existente sem fingerprint: não é seguro retomá-lo.")
+        study.set_user_attr("purged_fingerprint", fingerprint)
+    elif previous != fingerprint:
+        raise RuntimeError("Fingerprint do estudo divergente: use novo armazenamento.")
     history_dir = C.HP_DIR / "trial_histories" / study_name
     history_dir.mkdir(parents=True, exist_ok=True)
 
@@ -121,6 +146,7 @@ def run(target_trials: int = 25, max_steps: int = 400,
     ranking.to_csv(C.HP_DIR / "feature_ranking_best.csv", index=False)
     payload = {
         "study_name": study_name,
+        "study_fingerprint": fingerprint,
         "storage": str(storage_path),
         "target_trials": target_trials,
         "trials_recorded": len(study.trials),
@@ -131,11 +157,12 @@ def run(target_trials: int = 25, max_steps: int = 400,
         "selected_features": features,
         "max_steps": max_steps,
         "hp_window": {k: v for k, v in first.items() if not k.endswith("_idx")},
-        "validation_scheme": "fixed first 8-year train / 2-year validation; parameters frozen before all test years",
+        "validation_scheme": "fixed first 8-year train / 2-year validation; target boundaries purged by horizon; parameters frozen before all test years",
+        "split_policy": "purged_train_validation_and_validation_test_h22_v1",
         "pruning": "MedianPruner with trial.report and trial.should_prune at validation checks",
         "target_transform": "log variance",
     }
-    save_json(payload, C.HP_DIR / "best_config.json")
+    save_json(payload, C.HP_DIR / "best_config_purged.json")
     print(f"Trials: {len(study.trials)}/{target_trials}; completos={len(complete)}")
     print(f"Melhor trial={best.number}; QLIKE validação={best.value:.6f}")
     return payload
@@ -151,6 +178,8 @@ def main() -> int:
                         help="diretório persistente; recebe backup SQLite após cada trial")
     parser.add_argument("--smoke", action="store_true")
     args = parser.parse_args()
+    import torch
+    torch.set_num_threads(2)
     run(args.target_trials, args.max_steps, args.timeout_minutes, args.storage,
         args.smoke, args.backup_dir)
     return 0

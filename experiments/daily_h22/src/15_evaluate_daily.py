@@ -25,7 +25,7 @@ except ImportError:
     pass
 
 
-def _load_forecasts() -> pd.DataFrame:
+def _load_forecasts(strict_nested: bool = False) -> pd.DataFrame:
     files = sorted(C.FORECAST_DIR.glob("*.parquet"))
     files = [p for p in files if p.name != "all_models.parquet"]
     if not files:
@@ -34,6 +34,8 @@ def _load_forecasts() -> pd.DataFrame:
     out = pd.concat(frames, ignore_index=True)
     out["origin_date"] = pd.to_datetime(out["origin_date"])
     out["target_date"] = pd.to_datetime(out["target_date"])
+    if strict_nested and out[out.model.isin(["HAR", "HAR-VIX"])].duplicated(["model", "origin_date", "target_date", "horizon"]).any():
+        raise ValueError("Duplicate forecast keys in nested comparison")
     out = out.drop_duplicates(["model", "origin_date", "target_date", "horizon"], keep="last")
     return out.sort_values(["model", "origin_date", "horizon"]).reset_index(drop=True)
 
@@ -152,6 +154,65 @@ def predictive_tests(forecasts: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFram
         gw["GW_pvalue_FDR_all_horizons"] = _fdr_bh(gw.GW_pvalue_vs_RW)
     return dm, gw
 
+
+
+def clark_west_nested(forecasts: pd.DataFrame) -> pd.DataFrame:
+    """One-sided CW on matched variance forecasts; see limitation column.
+
+    A 22-day rolling realized-variance target overlaps even at h=1, so use
+    at least 21 HAC lags, and at least h-1 for forecast-horizon overlap.
+    """
+    from scipy.stats import norm
+
+    keys = ["origin_date", "target_date", "horizon"]
+    pair = forecasts[forecasts.model.isin(["HAR", "HAR-VIX"])].copy()
+    if set(pair.model.unique()) != {"HAR", "HAR-VIX"}:
+        raise ValueError("Clark-West requires both HAR and HAR-VIX forecasts")
+    if pair.duplicated(["model", *keys]).any():
+        raise ValueError("Duplicate forecast keys in nested comparison")
+    a = pair[pair.model == "HAR"][keys + ["window_id", "y", "y_hat"]]
+    b = pair[pair.model == "HAR-VIX"][keys + ["window_id", "y", "y_hat"]]
+    joined = a.merge(b, on=keys, how="outer", suffixes=("_restricted", "_unrestricted"), indicator=True,
+                     validate="one_to_one")
+    if not (joined._merge == "both").all():
+        raise ValueError("HAR and HAR-VIX origin/target/horizon keys differ")
+    if not (joined.window_id_restricted == joined.window_id_unrestricted).all():
+        raise ValueError("HAR and HAR-VIX window assignments differ")
+    if not np.allclose(joined.y_restricted, joined.y_unrestricted, rtol=1e-12, atol=1e-14, equal_nan=False):
+        raise ValueError("HAR and HAR-VIX realized targets differ")
+    rows = []
+    for horizon, group in joined.groupby("horizon", sort=True):
+        group = group.sort_values("origin_date")
+        y = group.y_restricted.to_numpy(float)
+        f0 = group.y_hat_restricted.to_numpy(float)
+        f1 = group.y_hat_unrestricted.to_numpy(float)
+        if not np.isfinite(np.column_stack([y, f0, f1])).all():
+            raise ValueError("Nonfinite target or forecast in nested comparison")
+        adjusted = (y - f0) ** 2 - (y - f1) ** 2 + (f0 - f1) ** 2
+        lags = max(C.RV_WINDOW - 1, int(horizon) - 1)
+        stat, _ = _hac_mean_test(adjusted, maxlags=lags)
+        # On the fitted log-RV scale, the two OLS specifications are nested.
+        # Forecast clipping invalidates recovery of the original linear forecast.
+        log_ok = (y > C.EPS).all() and (f0 > np.exp(-30)).all() and (f1 > np.exp(-30)).all() and (f0 < np.exp(10)).all() and (f1 < np.exp(10)).all()
+        if log_ok:
+            ly, l0, l1 = np.log(y), np.log(f0), np.log(f1)
+            log_adjusted = (ly - l0) ** 2 - (ly - l1) ** 2 + (l0 - l1) ** 2
+            log_stat, _ = _hac_mean_test(log_adjusted, maxlags=lags)
+        else:
+            log_stat = np.nan
+        rows.append({"restricted": "HAR", "unrestricted": "HAR-VIX", "horizon": int(horizon),
+                     "n": len(group), "hac_lags": min(lags, max(0, len(group) - 2)),
+                     "mean_adjusted_loss_difference": float(np.mean(adjusted)),
+                     "CW_stat": stat, "CW_pvalue_one_sided": float(norm.sf(stat)) if np.isfinite(stat) else np.nan,
+                     "CW_log_stat": log_stat,
+                     "CW_log_pvalue_one_sided": float(norm.sf(log_stat)) if np.isfinite(log_stat) else np.nan,
+                     "log_scale_note": "Primary nested OLS log-RV comparison; asymptotic inference assumes suitable dependence and forecast estimation conditions. Unavailable if targets or predictions are clipped. HAC treats consecutive retained origins as adjacent.",
+                     "reference": "Clark and West (2007), https://www.kansascityfed.org/documents/5368/pdf-RWP05-05.pdf",
+                     "limitation": "Approximate variance-scale CW: models are linear in log RV, then exponentiated; forecasts are not linear nested conditional means of variance. No retransformation bias correction."})
+    out = pd.DataFrame(rows)
+    out["CW_pvalue_BH_across_horizons"] = _fdr_bh(out.CW_pvalue_one_sided)
+    out["CW_log_pvalue_BH_across_horizons"] = _fdr_bh(out.CW_log_pvalue_one_sided)
+    return out
 
 def run_mcs_h22(forecasts: pd.DataFrame, reps: int = 1000,
                  block_size: int = 22, size: float = 0.05) -> tuple[pd.DataFrame, dict]:
@@ -276,7 +337,7 @@ def _convergence_figure() -> None:
 def run(smoke: bool = False, require_complete: bool = False,
         mcs_reps: int = 1000) -> None:
     ensure_directories()
-    forecasts = _load_forecasts()
+    forecasts = _load_forecasts(strict_nested=True)
     expected_windows = 16
     coverage = forecasts.groupby("model").window_id.nunique().rename("completed_windows").reset_index()
     coverage["expected_windows"] = expected_windows
@@ -302,6 +363,8 @@ def run(smoke: bool = False, require_complete: bool = False,
     ).reset_index()
     by_window.to_csv(C.METRICS_DIR / "metrics_by_window.csv", index=False)
 
+    if {"HAR", "HAR-VIX"}.issubset(set(forecasts.model)):
+        clark_west_nested(forecasts).to_csv(C.METRICS_DIR / "clark_west_har_vix.csv", index=False)
     dm, gw = predictive_tests(forecasts)
     dm.to_csv(C.METRICS_DIR / "dm_vs_rw_by_horizon.csv", index=False)
     gw.to_csv(C.METRICS_DIR / "gw_vs_rw_by_horizon.csv", index=False)
@@ -337,8 +400,13 @@ def main() -> int:
     parser.add_argument("--smoke", action="store_true")
     parser.add_argument("--require-complete", action="store_true")
     parser.add_argument("--mcs-reps", type=int, default=1000)
+    parser.add_argument("--nested-only", action="store_true", help="Evaluate only the HAR/HAR-VIX comparison")
     args = parser.parse_args()
-    run(args.smoke, args.require_complete, args.mcs_reps)
+    if args.nested_only:
+        ensure_directories()
+        clark_west_nested(_load_forecasts(strict_nested=True)).to_csv(C.METRICS_DIR / "clark_west_har_vix.csv", index=False)
+    else:
+        run(args.smoke, args.require_complete, args.mcs_reps)
     return 0
 
 

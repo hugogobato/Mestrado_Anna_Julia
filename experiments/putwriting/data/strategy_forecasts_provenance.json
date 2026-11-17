@@ -1,0 +1,19 @@
+{
+  "description": "Statistical forecasts preserved; LSTM and TSMixerX replaced by a separate run with purged train/validation boundaries and fresh Optuna study.",
+  "inputs_sha256": {
+    "data/archived_forecasts_h22.parquet": "c409391904e36b27b07c0b01c13c69c35cc0d191ffb0698d49d0a64c3f115f85",
+    "results/neural_purged/forecasts/lstm.parquet": "4a706f3b7106ecf991de37e64a0cf7c66df26c270041149d4eaa3d23811de28e",
+    "results/neural_purged/forecasts/tsmixerx.parquet": "db1b60b61d95257a6a1b112e53bb83f75402dc52845c70504947eb3cf6e128e2"
+  },
+  "output_sha256": "cd34c30122e6dcfa3d35f57ea70ba7092ee98ccef0b4003e4026baa4c2fa760f",
+  "coverage": {
+    "GARCH(1,1)": 4002,
+    "HAR": 4002,
+    "LSTM": 4002,
+    "RW": 4002,
+    "TSMixerX": 4002,
+    "VIX": 4002,
+    "VIX_calibrated": 4002,
+    "XGBoost": 4002
+  }
+}

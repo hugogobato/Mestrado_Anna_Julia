@@ -1,0 +1,15 @@
+{
+  "best_config_sha256": "748cc7b9985e5918929ac600c542e7a67a490adaa98e4f260f15460f9083cd7e",
+  "max_steps": 400,
+  "panel_sha256": "bc60a958f8d662c445ba39a2dad3e89897f286bc42a4ce83ed7c5aef0f1d2b2f",
+  "seed": 42,
+  "source_sha256": {
+    "13_neural_rolling.py": "95b81963c6c5a31602607fa6bc45d14752eaab2c59b0b2297b78c29c0d59dae9",
+    "config.py": "6ef75c973f8626c72f984766ca7614ff73202b1878733df383d26da4320f16a1",
+    "feature_selection.py": "036cf676a97a3368534e25eb0efdc70129e6c6005b6d8a8cd56d7a66f9672b2c",
+    "models.py": "d4d63e2624325ac7e09b6d870b0a409d91e8bb7a3920efc50bc927a65aa52acf",
+    "utils.py": "21700a9d26a397fe02a33408a5def03e552218e467ce377a33aaddcece4513bd"
+  },
+  "split_policy": "purged_train_validation_and_validation_test_h22_v1",
+  "version": 1
+}
