@@ -1,0 +1,11 @@
+{
+  "status": "interrupted by operator after fallback completion; no clean rolling run",
+  "states": {
+    "TrialState.COMPLETE": 11,
+    "TrialState.PRUNED": 5,
+    "TrialState.FAIL": 1
+  },
+  "target_trials": 25,
+  "best_completed_trial": 1,
+  "best_validation_qlike": 0.2092617268952731
+}

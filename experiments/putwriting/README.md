@@ -1,5 +1,8 @@
 # Revisões da qualificação e estratégia Cash-Secured Put Writing
 
+Para os dados complementares e a marcação diária até 2025, veja o
+[guia da revisão](followup/README.md). Este documento registra a primeira entrega.
+
 Este diretório operacionaliza o pedido de [Modificações Dissertação.md](../../Modifica%C3%A7%C3%B5es%20Disserta%C3%A7%C3%A3o.md). Contém código, dados intermediários com proveniência, resultados efetivamente executados e um notebook Colab. Os resultados anteriores continuam em `experiments/daily_h22/results/`.
 
 ## Começar pelos resultados

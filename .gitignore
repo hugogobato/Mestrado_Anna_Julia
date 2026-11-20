@@ -16,4 +16,5 @@ CONTEXTO_NOVO_CHAT.md
 Artigo EGEN.docx.md
 mensagem_whatsapp_resultados.txt
 *.zip
+!experiments/putwriting/followup/results/statistical/xgboost_models/*.zip
 

@@ -1,0 +1,2 @@
+-r ../requirements.txt
+xgboost-cpu==2.1.4

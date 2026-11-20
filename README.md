@@ -1,9 +1,10 @@
 # Dissertação da Anna Julia
 
-As implementações solicitadas após a qualificação estão em
-[`experiments/putwriting/`](experiments/putwriting/README.md).
-O guia contém comandos, notebook Colab, resultados e as pendências dos dados
-que precisam ser resolvidas para fechar o backtest diário.
+A revisão com os dados complementares da Anna está no
+[guia do backtest diário até 2025](experiments/putwriting/followup/README.md).
+Veja também os [resultados da revisão](experiments/putwriting/followup/RESULTADOS.md).
+A [primeira entrega da qualificação](experiments/putwriting/README.md) contém os
+resultados que usavam apenas os prêmios de entrada e as liquidações.
 
 O pedido original está em [Modificações Dissertação.md](Modificações%20Disserta%C3%A7%C3%A3o.md).
 O histórico de previsão diária está em

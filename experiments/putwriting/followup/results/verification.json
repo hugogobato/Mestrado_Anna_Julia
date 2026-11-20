@@ -1,0 +1,20 @@
+{
+  "equity_curves": 108,
+  "base_scenarios": 36,
+  "sessions_per_curve_including_anchor": 2517,
+  "2025_entries_per_scenario": 11,
+  "2025_settlements_per_scenario": 12,
+  "expiry_periods_per_scenario": 120,
+  "strict_prior_session_signals": true,
+  "terminal_nav_invariant_to_marking_policy": true,
+  "vix_raw_cash_only_both_iv_sources": true,
+  "models": 9,
+  "forecasts_per_model_per_horizon": 4024,
+  "scored_h22_origins_per_model": 4002,
+  "training_validation_boundaries_checked": 16,
+  "neural_checkpoints_reload_verified": 32,
+  "xgboost_reload_models_sampled": 6,
+  "forecast_csv_gzip_sha256_verified": 34,
+  "source_hashes_match_manifest": true,
+  "optional_colab_notebook_local_cpu_smoke": "one trial and one fold per model; actual GPU runtime not tested"
+}

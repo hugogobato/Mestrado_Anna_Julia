@@ -1,0 +1,83 @@
+{
+  "source_sha256": {
+    "BASES DE DADOS-20261117T124409Z-1-001.zip": "defacfc0fa86ae4894d9c8754ab915d54235ef021bf6f90d15f9bd85add9d49a",
+    "DADOS FALTANTES-20261120T201147Z-1-001.zip": "bc063b15509bd44387ef4557f83478da9214e62b360950941e123ee23ef52e7d"
+  },
+  "overlaps": [
+    {
+      "series": "spx",
+      "overlap_dates": 0,
+      "old_end": "2024-12-31",
+      "new_start": "2025-01-02",
+      "new_end": "2025-12-31",
+      "new_rows": 250
+    },
+    {
+      "series": "iv",
+      "overlap_dates": 0,
+      "old_end": "2024-12-31",
+      "new_start": "2025-01-02",
+      "new_end": "2025-12-31",
+      "new_rows": 250
+    },
+    {
+      "series": "vix",
+      "overlap_dates": 0,
+      "old_end": "2024-12-31",
+      "new_start": "2025-01-02",
+      "new_end": "2025-12-31",
+      "new_rows": 258
+    }
+  ],
+  "sessions_2025": {
+    "spx": 250,
+    "iv": 250,
+    "vix": 258,
+    "tbill": 261
+  },
+  "vix_extra_dates_2025": [
+    "2025-01-09",
+    "2025-01-20",
+    "2025-02-17",
+    "2025-05-26",
+    "2025-06-19",
+    "2025-07-04",
+    "2025-09-01",
+    "2025-11-27"
+  ],
+  "quotes": {
+    "rows": 2517,
+    "contracts": 120,
+    "unmatched_identity_rows": 0,
+    "missing": {
+      "quote_date": 0,
+      "option_ticker": 0,
+      "roll_date": 0,
+      "expiry": 0,
+      "strike": 0,
+      "bid": 24,
+      "ask": 6,
+      "mid": 24,
+      "last": 70,
+      "ivol_mid_pct": 84,
+      "volume": 71,
+      "open_int": 3
+    },
+    "entry_matches": 120,
+    "entry_bid_mismatches": 0,
+    "entry_ask_mismatches": 0,
+    "entry_mid_mismatches": 0,
+    "bid_above_ask": 0,
+    "mid_mismatches": 0,
+    "rows_on_or_after_expiry": 0,
+    "expected_session_gaps": 23,
+    "missing_quote_rows": 0,
+    "missing_mid_rows": 23
+  },
+  "settlement": {
+    "rows": 120,
+    "missing": 0,
+    "mismatches": 0,
+    "nominal_friday_differs": 3
+  }
+}

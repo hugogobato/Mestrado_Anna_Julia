@@ -1,0 +1,38 @@
+{
+  "aligned_spx_and_vix_model_sessions": 6539,
+  "aligned_2025_sessions": 250,
+  "max_absolute_model_market_ohlc_and_vix_difference": 0.0,
+  "entry_iv_contract_minus_live_pp": {
+    "count": 120.0,
+    "mean": 0.07915250000000004,
+    "std": 0.30383877911019935,
+    "min": -1.2865000000000002,
+    "25%": -0.06055000000000099,
+    "50%": 0.08755000000000024,
+    "75%": 0.23684999999999956,
+    "max": 1.119299999999999
+  },
+  "entry_absolute_strike_distance_from_spx_close_pct": {
+    "count": 120.0,
+    "mean": 0.0379644115523616,
+    "std": 0.026067835568774005,
+    "min": 0.0,
+    "25%": 0.015193997832457784,
+    "50%": 0.03587577889637705,
+    "75%": 0.054110342005958545,
+    "max": 0.11575884616588095
+  },
+  "quote_lower_bound_screen": {
+    "mid": {
+      "valid_pairs": 2492,
+      "below_indicative_bound": 60,
+      "max_shortfall_index_points": 30.57095338172735
+    },
+    "ask": {
+      "valid_pairs": 2510,
+      "below_indicative_bound": 26,
+      "max_shortfall_index_points": 18.8358396406735
+    }
+  },
+  "bound": "max(K/(1+lagged USGG1M \u00d7 calendar days/360) \u2212 S_close, 0); threshold 0.01 point. Indicative only: quote timestamps and yield convention are unresolved."
+}

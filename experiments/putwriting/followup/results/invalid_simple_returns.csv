@@ -1,0 +1,4 @@
+feature,values_le_minus_one,values_equal_minus_one,minimum
+ret_nky_simple,308,308,-1.0
+ret_ukx_simple,112,112,-1.0
+ret_wti_simple,14,12,-3.059660646

@@ -1,0 +1,69 @@
+{
+  "start": "2015-12-17",
+  "end": "2025-12-19",
+  "entries": 120,
+  "scenario_count": 36,
+  "mark_policies": {
+    "observed_mid": "same-day observed mid; missing marks remain missing",
+    "mid_else_ask_stale": "current mid, else current ask, else last valid mark floored at zero; approximate sensitivity",
+    "ask_stale": "current ask, else current mid, else last valid mark floored at zero; approximate sensitivity"
+  },
+  "execution_prices": [
+    "bid",
+    "mid"
+  ],
+  "accounting_reconciled_each_scenario": true,
+  "clock": "close-to-close; AM SOQ then replacement EOD assumed",
+  "fees": "none",
+  "rates": "strictly prior, ACT/360, source convention unverified",
+  "official_put": "official close-to-close; not an AM settlement index",
+  "expiry": "EOD-to-EOD, including replacement execution; final open position excluded",
+  "bootstrap_reps": 2000,
+  "inputs": [
+    {
+      "name": "BASES DE DADOS-20261117T124409Z-1-001.zip",
+      "sha256": "defacfc0fa86ae4894d9c8754ab915d54235ef021bf6f90d15f9bd85add9d49a"
+    },
+    {
+      "name": "DADOS FALTANTES-20261120T201147Z-1-001.zip",
+      "sha256": "bc063b15509bd44387ef4557f83478da9214e62b360950941e123ee23ef52e7d"
+    },
+    {
+      "name": "panel.parquet",
+      "sha256": "75103804da13c8e961c5af06a3ec38cdb5a2e250d8990130973fbcc3b9f99c9a"
+    },
+    {
+      "name": "lstm.parquet",
+      "sha256": "5a865bed6b0ea036a90f56dca0a7eea4ca0f0bf9d225e6c162ff14921ffd218b"
+    },
+    {
+      "name": "tsmixerx.parquet",
+      "sha256": "6db280226d3b0e290671a791c117dadaf64009ebced0779fa3da5a8eabd39f92"
+    },
+    {
+      "name": "forecasts.parquet",
+      "sha256": "352b8bc28e36d432662bc3e9051866db8f3abe6f04398e845d4f9526ac8b50fd"
+    },
+    {
+      "name": "har_comparison.parquet",
+      "sha256": "aac16f8b0737c3632067e4e3c2ce1ee40a944b905d014f513ad2901a789ee1c7"
+    }
+  ],
+  "source_sha256": {
+    "evaluate.py": "122d2bcab2ac292a977f7b9de35dea2fe3bcad45f85d01ae46a206b92e7ae6c0",
+    "figures.py": "d0d5a3d1d343321e54e24f85a6caecd892cbdb4a91cc44f7bcad9a42f2bc0d05",
+    "market.py": "97a1beeb1ea056bd498c0cf3f6c99b88a2963b5ae31032bd008e9a71127bbaf1",
+    "pack_forecasts.py": "43f9ec2ddf4320ee6a8388f88bd5ba6f7227304d6483e031c6b4bfb81c8d6a76",
+    "panel.py": "0a513534708a5334e74602351d7ad0a20fa6f158a76890fe5aab6868bfc93873",
+    "run.py": "2f2f9ebbb7269dd466c752d9e0ffe73a0e52ac27be796f7c248d09eb2ff57bbc",
+    "statistical.py": "aa86bcf6c9c1ec25605ccf896867bb32852307203a6f8897cf87351a29fe9385",
+    "strategy.py": "8f9e1d1bde78cc75c5cb00cff47aabf1ce614475e4136e80fae8bbece5932104"
+  },
+  "packages": {
+    "pandas": "3.1.1",
+    "numpy": "2.5.5",
+    "scipy": "1.18.1",
+    "statsmodels": "0.15.0",
+    "pyarrow": "26.0.1"
+  }
+}
